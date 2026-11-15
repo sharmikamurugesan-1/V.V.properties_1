@@ -101,6 +101,17 @@
       border-bottom: 3px solid #0F52BA !important;
       transform: translateY(-3px) !important;
     }
+  
+    /* Prevent browser autofill background coloring */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover, 
+    input:-webkit-autofill:focus,
+    input:-webkit-autofill:active {
+      -webkit-box-shadow: 0 0 0 1000px white inset !important;
+      -webkit-text-fill-color: #0f172a !important;
+      transition: background-color 5000s ease-in-out 0s;
+    }
+
   </style>
 </head>
 <body class="h-full bg-slate-50 text-slate-800 flex overflow-hidden text-xs">
@@ -108,7 +119,7 @@
   <!-- ======================================================== -->
   <!-- 1. AUTHENTICATION / LOGIN SCREEN (ONLY USERNAME & PW)    -->
   <!-- ======================================================== -->
-  <div id="loginScreen" class="fixed inset-0 z-[100] bg-navy-950/80 backdrop-blur-md flex items-center justify-center p-4">
+  <div id="loginScreen" class="fixed inset-0 z-[100] bg-black flex items-center justify-center p-4" style="background-color: #000000 !important;">
     <!-- FULL WHITE CARD WITH BLACK TEXT & LOGO MERGED WITH BACKGROUND -->
     <div class="w-full max-w-sm bg-white rounded-3xl shadow-2xl border border-slate-200/90 overflow-hidden p-8">
       
@@ -131,7 +142,7 @@
           <label class="block text-xs font-bold text-slate-800 mb-1">Username</label>
           <div class="relative">
             <i data-lucide="user" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3"></i>
-            <input id="loginUsername" type="text" required placeholder="Enter username" class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-royal/20 focus:border-royal outline-none transition-all">
+            <input id="loginUsername" type="text" required placeholder="Enter username" autocomplete="off" class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-royal/20 focus:border-royal outline-none transition-all">
           </div>
         </div>
 
@@ -139,7 +150,7 @@
           <label class="block text-xs font-bold text-slate-800 mb-1">Password</label>
           <div class="relative">
             <i data-lucide="lock" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3"></i>
-            <input id="loginPassword" type="password" required placeholder="Password" class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-royal/20 focus:border-royal outline-none transition-all">
+            <input id="loginPassword" type="password" required placeholder="Password" autocomplete="new-password" class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-royal/20 focus:border-royal outline-none transition-all">
           </div>
         </div>
 
@@ -2067,7 +2078,7 @@ function handleLoginSubmit(e) {
       const list = document.getElementById('bannersList');
       if (!list) return;
       list.innerHTML = banners.map((b, i) => `
-        <div class="banner-drag-item group p-3.5 rounded-2xl border border-slate-200 bg-white hover:border-slate-300 transition-all duration-200 flex items-center justify-between gap-4 shadow-sm select-none"
+        <div class="banner-drag-item group p-3.5 rounded-2xl border border-slate-200 bg-white hover:border-slate-300 transition-all duration-200 flex items-center justify-between gap-4 shadow-sm select-none cursor-grab active:cursor-grabbing"
              draggable="true"
              data-index="${i}"
              ondragstart="handleBannerDragStart(event, ${i})"
@@ -2077,25 +2088,7 @@ function handleLoginSubmit(e) {
              ondragend="handleBannerDragEnd(event)">
           
           <div class="flex items-center gap-3 min-w-0">
-            <!-- Drag Handle & Order Controls -->
-            <div class="flex items-center gap-1 flex-shrink-0">
-              <div class="cursor-grab active:cursor-grabbing p-1.5 text-slate-300 group-hover:text-royal hover:bg-royal/5 rounded-lg transition-colors" title="Drag to reorder slide position">
-                <i data-lucide="grip-vertical" class="w-4 h-4"></i>
-              </div>
-              <div class="flex flex-col gap-0.5">
-                <button type="button" onclick="moveBanner(event, ${i}, -1)" ${i === 0 ? 'disabled class="opacity-20 cursor-not-allowed"' : 'class="hover:text-royal text-slate-400 p-0.5 rounded cursor-pointer transition-colors"'} title="Move Up">
-                  <i data-lucide="chevron-up" class="w-3.5 h-3.5"></i>
-                </button>
-                <button type="button" onclick="moveBanner(event, ${i}, 1)" ${i === banners.length - 1 ? 'disabled class="opacity-20 cursor-not-allowed"' : 'class="hover:text-royal text-slate-400 p-0.5 rounded cursor-pointer transition-colors"'} title="Move Down">
-                  <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
-                </button>
-              </div>
-            </div>
-
-            <!-- Slide Order Badge -->
-            <span class="w-6 h-6 rounded-full bg-slate-100 text-slate-600 font-bold text-[10px] flex items-center justify-center flex-shrink-0 border border-slate-200/80">#${i + 1}</span>
-
-            <!-- Banner Thumbnail -->
+            <!-- Banner Thumbnail (Directly on the left, all side icons removed) -->
             <img src="${b.img}" alt="${b.title}" class="w-16 h-12 rounded-xl object-cover flex-shrink-0 shadow-sm border border-slate-100 pointer-events-none">
             
             <div class="min-w-0">
