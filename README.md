@@ -79,13 +79,28 @@ graph TD
 * **CSV Export**: Instant export of verified leads for external CRM ingestion (Salesforce, HubSpot, Zoho).
 
 ### 3. 🖼️ Homepage Carousel & Banner Studio
-* **Multi-Banner Repository**: Stores and manages up to 10 high-resolution carousel slides (defaulting to 6 active luxury campaigns across ECR, OMR, Medavakkam, and Tambaram).
-* **Drag-and-Drop Prioritization**: Reorder homepage slides dynamically via intuitive drag handles.
-* **State Management**: Individual toggle switches to activate or deactivate slides with a strict 5-active concurrency guard.
+* **Multi-Banner Repository**: Stores and manages up to 10 high-resolution carousel slides (defaulting to 5 curated luxury campaigns across ECR, OMR, Medavakkam, and Tambaram).
+* **Direct Deactivation / Activation**: Instant toggling of banner visibility with clean status feedback.
+* **Streamlined UI**: Completely uncluttered presentation without redundant "Active / Inactive" text badges.
 
-### 4. 📊 Traffic & Enquiry Acquisition Velocity Analytics
-* **Dynamic Time Horizons**: Interactive SVG analytics visualizing trends across `1 Week`, `1 Month`, `3 Months`, `6 Months`, and `1 Year`.
-* **Sampled Data Visualization**: Smooth bezier curve path with dynamic date labels and trend metrics.
+### 4. 📊 Website Trafficking Analytics & Dynamic Date Horizons
+* **Dynamic Date Horizons**: Interactive SVG analytics visualizing trends across `24 Hours`, `1 Week`, `1 Month`, `3 Months`, `6 Months`, `1 Year`, and `MAX` (all-time portfolio lifetime).
+* **Anchor-Based 5-Point Date Milestones**: Automatically calculates 5 milestone dates (`DD/MM`) anchored to the active date (`14/11/2026`):
+  * **1 Month (`1M`)**: Spans `14/10` to `14/11` (`14/10`, `22/10`, `30/10`, `07/11`, `14/11`).
+  * **1 Week (`1W`)**: Spans `07/11` to `14/11` without day-of-week abbreviations.
+  * **3 Months (`3M`)**: Spans `14/08` to `14/11`.
+* **Dense Bezier Curve**: 15–20 undulating data points rendering real-time website outreach velocity without bottom caption clutter.
+* **Custom Calendar Picker**: Integrated native HTML5 date picker for arbitrary start and end date ranges.
+
+### 5. 🗄️ Centralized Catalog & Cross-Computer Sync
+* **Persistent Portfolio Store**: All properties, cover images, descriptions, and gallery images are preserved in `vv_properties_catalog`.
+* **1-Click JSON Backup & Import**: Download `vv_properties_catalog.json` and seamlessly load it on any other machine or deployment environment.
+* **Apt Line Icons for Amenities**: Each facility (Bedrooms, Swimming Pool, Clubhouse & Gym, 24/7 Security, Covered Parking, Private Garden, Power Backup, Elevator, Water Supply, CCTV, Play Area, EV Charging) renders with its dedicated Lucide line icon.
+
+### 6. 🛡️ Admin Security, Eye Toggle & Avatar Sync
+* **Password Visibility Toggle**: Interactive eye icon (`👁` / `eye-off`) for seamless credential inspection.
+* **Persistent Avatar Header Sync**: Uploaded administrator photos persist in `vv_admin_avatar` and immediately synchronize with the top-right header avatar and sidebar across all pages.
+* **Exact Date & Time Audit Trail**: Activity logs record exact timestamps (e.g. `14 Nov 2026, 10:45:12 PM`) with attribution for all team members (`Victor Paul`, `Saran`, `Vibhkar`, `Umeshwar`, `Sharmika`).
 
 ---
 
