@@ -112,6 +112,22 @@
       transition: background-color 5000s ease-in-out 0s;
     }
 
+  
+    /* Chrome Autofill Neutralizer & Pure Black Backdrop */
+    #loginScreen {
+      background-color: #000000 !important;
+      background: #000000 !important;
+      opacity: 1 !important;
+    }
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover, 
+    input:-webkit-autofill:focus, 
+    input:-webkit-autofill:active {
+      -webkit-box-shadow: 0 0 0 30px white inset !important;
+      -webkit-text-fill-color: #0f172a !important;
+      transition: background-color 5000s ease-in-out 0s !important;
+    }
+
   </style>
 </head>
 <body class="h-full bg-slate-50 text-slate-800 flex overflow-hidden text-xs">
@@ -119,7 +135,7 @@
   <!-- ======================================================== -->
   <!-- 1. AUTHENTICATION / LOGIN SCREEN (ONLY USERNAME & PW)    -->
   <!-- ======================================================== -->
-  <div id="loginScreen" class="fixed inset-0 z-[100] bg-black flex items-center justify-center p-4" style="background-color: #000000 !important;">
+  <div id="loginScreen" class="fixed inset-0 z-[99999] bg-black flex items-center justify-center p-4" style="background-color: #000000 !important; background: #000000 !important; opacity: 1 !important;">
     <!-- FULL WHITE CARD WITH BLACK TEXT & LOGO MERGED WITH BACKGROUND -->
     <div class="w-full max-w-sm bg-white rounded-3xl shadow-2xl border border-slate-200/90 overflow-hidden p-8">
       
@@ -142,7 +158,7 @@
           <label class="block text-xs font-bold text-slate-800 mb-1">Username</label>
           <div class="relative">
             <i data-lucide="user" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3"></i>
-            <input id="loginUsername" type="text" required placeholder="Enter username" autocomplete="off" class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-royal/20 focus:border-royal outline-none transition-all">
+            <input id="loginUsername" type="text" required placeholder="Enter username" autocomplete="new-password" class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-royal/20 focus:border-royal outline-none transition-all">
           </div>
         </div>
 
@@ -2785,6 +2801,15 @@ const denseCurvePoints = {
     document.addEventListener('DOMContentLoaded', () => {
       updateDate();
       checkAuth();
+
+      // Ensure login inputs start completely blank without browser auto-fill
+      setTimeout(() => {
+        const u = document.getElementById('loginUsername');
+        const p = document.getElementById('loginPassword');
+        if (u) u.value = '';
+        if (p) p.value = '';
+      }, 50);
+
       renderProperties();
       renderBanners();
       renderEnquiries();
