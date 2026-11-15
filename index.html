@@ -118,7 +118,7 @@
           <label class="block text-xs font-semibold text-slate-500 mb-1">Password</label>
           <div class="relative">
             <i data-lucide="lock" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3"></i>
-            <input id="loginPassword" type="password" required placeholder="Enter password" class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold focus:ring-2 focus:ring-royal/20 outline-none">
+            <input id="loginPassword" type="password" required placeholder="Password" class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold focus:ring-2 focus:ring-royal/20 outline-none">
           </div>
         </div>
 
@@ -210,16 +210,7 @@
       </div>
     </nav>
 
-    <!-- User Profile Footer Pill in Sidebar -->
-    <div class="p-4 border-t border-navy-800/80">
-      <div class="flex items-center gap-3 p-2 rounded-xl bg-white/5 border border-white/5">
-        <div id="sideAvatarInitial" class="w-8 h-8 rounded-full bg-royal text-white font-bold flex items-center justify-center text-xs flex-shrink-0">V</div>
-        <div class="flex-1 min-w-0">
-          <p id="sideDisplayName" class="text-xs font-bold text-white truncate">Victor Paul</p>
-          <p id="sideRoleName" class="text-[10px] text-slate-400 truncate">Super Administrator</p>
-        </div>
-      </div>
-    </div>
+
   </aside>
 
   <!-- ======================================================== -->
@@ -242,7 +233,7 @@
         </div>
         <div class="text-right">
           <h2 id="topDisplayName" class="text-xs font-bold text-navy-900 leading-tight">Victor Paul</h2>
-          <p id="topRoleName" class="text-[11px] text-slate-500 font-medium">Super Administrator</p>
+          <p id="topRoleName" class="text-[9px] text-slate-400 font-medium tracking-wide">Super Administrator</p>
         </div>
       </div>
     </header>
@@ -259,7 +250,7 @@
           <p class="text-xs lg:text-sm text-slate-500 mt-0.5 font-medium">Real-time overview of listing portfolios, lead generation, and performance.</p>
         </div>
 
-        <!-- 4 STAT CARDS -->
+        <!-- 4 STAT CARDS (ALL WITH MATCHING CLEAN LINE ICONS) -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <!-- Total Properties -->
           <div class="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow">
@@ -270,12 +261,13 @@
               </div>
             </div>
             <div class="text-3xl font-extrabold text-navy-900 tracking-tight" id="dashTotalProps">10</div>
-            <p class="text-xs font-semibold text-emerald mt-1.5 flex items-center gap-1">
-              <span>↑ 14% this month</span>
+            <p class="text-xs font-semibold text-emerald mt-1.5 flex items-center gap-1.5">
+              <i data-lucide="trending-up" class="w-3.5 h-3.5 flex-shrink-0"></i>
+              <span>14% this month</span>
             </p>
           </div>
 
-          <!-- Draft Properties – 3 (Awaiting publication) -->
+          <!-- Draft Properties – 3 -->
           <div class="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow">
             <div class="flex items-center justify-between text-slate-400 mb-2.5">
               <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Draft Properties</span>
@@ -284,7 +276,8 @@
               </div>
             </div>
             <div class="text-3xl font-extrabold text-navy-900 tracking-tight">3</div>
-            <p class="text-xs font-semibold text-amber-600 mt-1.5 flex items-center gap-1">
+            <p class="text-xs font-semibold text-amber-600 mt-1.5 flex items-center gap-1.5">
+              <i data-lucide="clock-3" class="w-3.5 h-3.5 flex-shrink-0"></i>
               <span>Awaiting publication</span>
             </p>
           </div>
@@ -298,8 +291,9 @@
               </div>
             </div>
             <div class="text-3xl font-extrabold text-navy-900 tracking-tight" id="dashTotalEnquiries">10</div>
-            <p class="text-xs font-semibold text-royal mt-1.5 flex items-center gap-1">
-              <span>↗ Verified leads</span>
+            <p class="text-xs font-semibold text-royal mt-1.5 flex items-center gap-1.5">
+              <i data-lucide="check-circle-2" class="w-3.5 h-3.5 flex-shrink-0"></i>
+              <span>Verified leads</span>
             </p>
           </div>
 
@@ -312,7 +306,8 @@
               </div>
             </div>
             <div class="text-3xl font-extrabold text-navy-900 tracking-tight" id="dashNewLeads">4</div>
-            <p class="text-xs font-semibold text-amber-600 mt-1.5 flex items-center gap-1">
+            <p class="text-xs font-semibold text-amber-600 mt-1.5 flex items-center gap-1.5">
+              <i data-lucide="alert-circle" class="w-3.5 h-3.5 flex-shrink-0"></i>
               <span>Needs follow-up</span>
             </p>
           </div>
@@ -333,14 +328,14 @@
                 <!-- DROPDOWN MENU FOR TIME RANGES (AS REQUESTED) -->
                 <div class="flex items-center gap-2 relative">
                   <select id="chartRangeSelect" onchange="handleChartRangeSelect(this.value)" class="px-3 py-1.5 rounded-xl border border-slate-200 bg-white text-xs font-bold text-slate-700 outline-none focus:ring-2 focus:ring-royal/20 shadow-sm cursor-pointer">
-                    <option value="MAX">MAX</option>
                     <option value="24h">24 Hours</option>
                     <option value="1W">1 Week</option>
                     <option value="1M">1 Month</option>
                     <option value="3M" selected>3 Months</option>
                     <option value="6M">6 Months</option>
                     <option value="1Y">1 Year</option>
-                    <option value="custom">Customize Date Range</option>
+                    <option value="MAX">MAX</option>
+                    <option value="custom">Customize Date Range...</option>
                   </select>
 
                   <!-- Custom Date Picker Popover Modal -->
@@ -404,7 +399,7 @@
               <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-2">
                 <div>
                   <h3 class="font-sans font-bold text-navy-900 text-sm">Priority Leads</h3>
-                  <p class="text-xs text-slate-400 font-medium">Fresh incoming inquiries (3 Priority Leads)</p>
+                  <p class="text-xs text-slate-400 font-medium">Fresh incoming inquiries (4 Priority Leads)</p>
                 </div>
                 <button onclick="go('enquiries')" class="text-xs font-bold text-royal hover:underline flex items-center gap-1">
                   <span>View All</span>
@@ -447,34 +442,13 @@
             <h1 class="text-2xl lg:text-3xl font-extrabold text-navy-900 tracking-tight font-sans">Properties</h1>
             <p class="text-xs lg:text-sm text-slate-500 mt-0.5 font-medium">Active residential and commercial real estate portfolio.</p>
           </div>
-          <div class="flex items-center gap-2">
-            <button type="button" onclick="exportPortfolioJson()" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-navy-900 text-xs font-bold shadow-sm transition-all" title="Backup full portfolio data and images to JSON file">
-              <i data-lucide="download" class="w-3.5 h-3.5 text-royal"></i>
-              <span>Backup Catalog (JSON)</span>
-            </button>
-            <button type="button" onclick="document.getElementById('catalogImportFileInput').click()" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-navy-900 text-xs font-bold shadow-sm transition-all" title="Sync portfolio catalog from computer">
-              <i data-lucide="upload" class="w-3.5 h-3.5 text-emerald"></i>
-              <span>Import Catalog</span>
-            </button>
-            <input type="file" id="catalogImportFileInput" accept=".json" class="hidden" onchange="importPortfolioJson(event)">
-            <button onclick="openAddPropertyModal()" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-royal hover:bg-royal-hover text-white text-xs font-bold shadow-lg shadow-royal/25 transition-all">
-              <i data-lucide="plus" class="w-4 h-4"></i>
-              <span>Add Property</span>
-            </button>
-          </div>
+          <button onclick="openAddPropertyModal()" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-royal hover:bg-royal-hover text-white text-xs font-bold shadow-lg shadow-royal/25 transition-all">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            <span>Add Property</span>
+          </button>
+        </div>
         </div>
 
-        <!-- Cross-Computer Portfolio Sync Banner -->
-        <div id="deviceSyncBanner" class="hidden p-3.5 rounded-2xl bg-white border border-blue-200 shadow-sm flex items-center justify-between gap-3 text-xs">
-          <div class="flex items-center gap-2.5 text-navy-900 font-semibold">
-            <i data-lucide="folder-sync" class="w-4 h-4 text-royal flex-shrink-0"></i>
-            <span>Working across different computers? You can import your saved <code>vv_properties_catalog.json</code> or continue with active storage.</span>
-          </div>
-          <div class="flex items-center gap-2 flex-shrink-0">
-            <button type="button" onclick="document.getElementById('catalogImportFileInput').click()" class="px-3 py-1 rounded-xl bg-royal text-white font-bold text-xs hover:bg-royal-hover">Import Catalog</button>
-            <button type="button" onclick="document.getElementById('deviceSyncBanner').classList.add('hidden')" class="px-2.5 py-1 rounded-xl border border-slate-200 text-slate-500 hover:bg-slate-50">Dismiss</button>
-          </div>
-        </div>
         <!-- Filter & Search Toolbar -->
         <div class="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-sm flex flex-col md:flex-row items-stretch md:items-center gap-3 text-xs">
           <div class="relative flex-1">
@@ -531,9 +505,7 @@
           <div class="flex items-center justify-between pb-3 border-b border-slate-100">
             <h3 class="font-sans font-bold text-navy-900 text-sm">Carousel Slides</h3>
             <!-- Elevated clean white box for 5/10 (No blue background) -->
-            <div class="px-3.5 py-1.5 rounded-xl bg-white border border-slate-200 shadow-sm text-slate-700 font-bold text-xs">
-              5/10
-            </div>
+            <div id="activeBannersCounter" class="px-3.5 py-1.5 rounded-xl bg-white border border-slate-200 shadow-sm text-slate-700 font-bold text-xs">5/10</div>
           </div>
 
           <div class="space-y-3" id="bannersList">
@@ -602,82 +574,60 @@
           <p class="text-xs lg:text-sm text-slate-500 mt-0.5 font-medium">Manage administrator profile, credentials, and staff account directory.</p>
         </div>
 
-        <!-- PROFILE CREDENTIALS FORM -->
-        <div class="bg-white border border-slate-200/90 rounded-2xl p-6 max-w-3xl shadow-sm space-y-5">
-          <div class="space-y-4">
-            <!-- DISPLAY NAME -->
+        <!-- PROFILE CREDENTIALS FORM (SIDE-BY-SIDE GRID) -->
+        <div class="bg-white border border-slate-200/90 rounded-2xl p-6 max-w-4xl shadow-sm">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+            <!-- LEFT: SQUARE PROFILE PHOTO BOX -->
             <div>
-              <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Display Name</label>
-              <input id="adminDisplayNameInput" value="Victor Paul" oninput="handleAdminNameChange(this.value)" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-royal/20">
-            </div>
-
-            <!-- PROFILE PHOTO (BOX WITH + UPLOAD ON LEFT, DESCRIPTION ON RIGHT) -->
-            <div>
-              <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Profile Photo</label>
-              <div class="flex items-center gap-4">
-                <div class="w-20 h-20 rounded-2xl overflow-hidden bg-slate-50 border-2 border-dashed border-slate-300 flex flex-col items-center justify-center flex-shrink-0 cursor-pointer hover:border-royal hover:bg-royal/5 transition-all relative group" id="avatarDropBox" onclick="document.getElementById('adminAvatarFileInput').click()">
-                  <img id="adminAvatarImg" src="" alt="Admin Avatar" class="w-full h-full object-cover hidden">
-                  <div id="avatarPlusIcon" class="flex flex-col items-center justify-center text-slate-400 group-hover:text-royal">
-                    <i data-lucide="plus" class="w-6 h-6 stroke-[2]"></i>
-                    <span class="text-[10px] font-bold mt-1">Upload</span>
-                  </div>
-                  <input type="file" id="adminAvatarFileInput" accept="image/*" class="hidden">
+              <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Profile Photo</label>
+              <div class="w-full aspect-square max-w-[220px] rounded-2xl overflow-hidden bg-slate-50 border-2 border-dashed border-slate-300 flex flex-col items-center justify-center cursor-pointer hover:border-royal hover:bg-royal/5 transition-all relative group shadow-sm" id="avatarDropBox" onclick="document.getElementById('adminAvatarFileInput').click()">
+                <img id="adminAvatarImg" src="" alt="Admin Avatar" class="w-full h-full object-cover hidden">
+                <div id="avatarPlusIcon" class="flex flex-col items-center justify-center text-slate-400 group-hover:text-royal p-4 text-center">
+                  <i data-lucide="camera" class="w-8 h-8 stroke-[1.8] mb-1"></i>
+                  <span class="text-xs font-bold text-navy-900 mt-1">Upload Photo</span>
+                  <span class="text-[10px] text-slate-400 mt-0.5">JPG or PNG</span>
                 </div>
-                <div class="text-xs text-slate-500">
-                  <p class="font-bold text-navy-900">Drag & drop profile picture or click</p>
-                  <p class="text-[11px] text-slate-400 mt-0.5">Updates top-right avatar instantly (JPG, PNG)</p>
-                </div>
+                <input type="file" id="adminAvatarFileInput" accept="image/*" class="hidden">
               </div>
             </div>
 
-            <!-- USERNAME / EMAIL -->
-            <div>
-              <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Username / Email</label>
-              <input id="adminUsernameInput" value="victor" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs font-medium text-slate-800 outline-none focus:ring-2 focus:ring-royal/20">
-            </div>
-            
-            <!-- PASSWORD WITH EYE ICON TOGGLE ON THE RIGHT -->
-            <div class="pt-2">
-              <div class="flex items-center justify-between mb-1.5">
-                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider">Password</label>
-              </div>
-              <div class="relative">
-                <input id="adminPasswordField" type="password" value="victoradmin2026" class="w-full pl-3.5 pr-11 py-2.5 rounded-xl border border-slate-200 bg-white text-xs font-medium text-slate-800 outline-none focus:ring-2 focus:ring-royal/20">
-                <button type="button" onclick="toggleAdminPasswordVisibility()" class="absolute right-3 top-2.5 text-slate-400 hover:text-navy-900 transition-colors p-0.5 focus:outline-none" title="Toggle password visibility">
-                  <i data-lucide="eye" id="adminPwEyeIcon" class="w-4 h-4"></i>
-                </button>
-              </div>
-              <div class="flex justify-end mt-1.5">
-                <button type="button" onclick="togglePasswordSection()" class="text-xs font-bold text-royal hover:underline flex items-center gap-1">
-                  <i data-lucide="key" class="w-3.5 h-3.5"></i>
-                  <span>Edit Password</span>
-                </button>
-              </div>
-            </div>
-
-            <!-- COLLAPSIBLE EDIT PASSWORD FORM -->
-            <div id="passwordFields" class="hidden space-y-3 p-4 rounded-xl bg-slate-50 border border-slate-200">
+            <!-- RIGHT: 3 STACKED FIELDS (DISPLAY NAME, USERNAME, PASSWORD) -->
+            <div class="md:col-span-2 space-y-4">
+              <!-- DISPLAY NAME -->
               <div>
-                <label class="block text-[11px] font-bold text-slate-600 mb-1">Current Password</label>
-                <input type="password" id="curPassword" class="w-full px-3 py-2 rounded-lg border border-slate-200 text-xs outline-none">
+                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Display Name</label>
+                <input id="adminDisplayNameInput" value="Victor Paul" oninput="handleAdminNameChange(this.value)" placeholder="Display name" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-royal/20">
               </div>
-              <div class="grid grid-cols-2 gap-3">
-                <div>
-                  <label class="block text-[11px] font-bold text-slate-600 mb-1">New Password</label>
-                  <input type="password" id="newPassword" class="w-full px-3 py-2 rounded-lg border border-slate-200 text-xs outline-none">
+
+              <!-- USERNAME -->
+              <div>
+                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Username / Email</label>
+                <input id="adminUsernameInput" value="victor" placeholder="Username" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs font-medium text-slate-800 outline-none focus:ring-2 focus:ring-royal/20">
+              </div>
+
+              <!-- PASSWORD WITH EYE TOGGLE & CHANGE PASSWORD OVERLAY BUTTON -->
+              <div>
+                <div class="flex items-center justify-between mb-1.5">
+                  <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider">Password</label>
+                  <button type="button" onclick="openModal('changePasswordModal')" class="text-xs font-bold text-royal hover:underline flex items-center gap-1 cursor-pointer">
+                    <i data-lucide="key" class="w-3.5 h-3.5"></i>
+                    <span>Change Password</span>
+                  </button>
                 </div>
-                <div>
-                  <label class="block text-[11px] font-bold text-slate-600 mb-1">Confirm New Password</label>
-                  <input type="password" id="confirmPassword" class="w-full px-3 py-2 rounded-lg border border-slate-200 text-xs outline-none">
+                <div class="relative">
+                  <input id="adminPasswordField" type="password" value="victoradmin2026" class="w-full pl-3.5 pr-11 py-2.5 rounded-xl border border-slate-200 bg-white text-xs font-medium text-slate-800 outline-none focus:ring-2 focus:ring-royal/20">
+                  <button type="button" onclick="toggleAdminPasswordVisibility()" class="absolute right-3 top-2.5 text-slate-400 hover:text-navy-900 transition-colors p-0.5 focus:outline-none" title="Toggle password visibility">
+                    <i data-lucide="eye" id="adminPwEyeIcon" class="w-4 h-4"></i>
+                  </button>
                 </div>
+              </div>
+
+              <div class="pt-2">
+                <button onclick="saveAdminProfile()" class="px-6 py-2.5 rounded-xl bg-royal hover:bg-royal-hover text-white text-xs font-bold shadow-md shadow-royal/20 transition-all cursor-pointer">
+                  Save Profile Changes
+                </button>
               </div>
             </div>
-          </div>
-
-          <div class="pt-3">
-            <button onclick="saveAdminProfile()" class="px-6 py-2.5 rounded-xl bg-royal hover:bg-royal-hover text-white text-xs font-bold shadow-md shadow-royal/20 transition-all">
-              Save Profile Changes
-            </button>
           </div>
         </div>
 
@@ -778,24 +728,24 @@
         <div class="grid grid-cols-2 gap-4">
           <div>
             <label class="block font-medium text-slate-500 mb-1">Property Name</label>
-            <input id="propNameInput" placeholder="e.g. Prestige Bella Vista" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-royal/20 outline-none">
+            <input id="propNameInput" placeholder="Property Name" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-royal/20 outline-none">
           </div>
 
           <!-- PROPERTY TYPE (CLEAN TEXT INPUT, NOT A DROPDOWN) -->
           <div>
             <label class="block font-medium text-slate-500 mb-1">Property Type</label>
-            <input id="propTypeInput" placeholder="e.g. Villa · 4 BHK, Apartment · 3 BHK" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-royal/20 outline-none">
+            <input id="propTypeInput" placeholder="Property Type (e.g. Villa · 3 BHK)" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-royal/20 outline-none">
           </div>
 
           <div>
             <label class="block font-medium text-slate-500 mb-1">Location / Area</label>
-            <input id="propLocInput" placeholder="e.g. Porur, Chennai" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-royal/20 outline-none">
+            <input id="propLocInput" placeholder="Location / Area" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-royal/20 outline-none">
           </div>
 
           <!-- PRICE (CLEAN LABEL WITHOUT EXAMPLE TEXT) -->
           <div>
             <label class="block font-medium text-slate-500 mb-1">Price</label>
-            <input id="propPriceInput" placeholder="₹78 L or ₹1.85 Cr" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-royal/20 outline-none">
+            <input id="propPriceInput" placeholder="Price (e.g. ₹78 L)" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-royal/20 outline-none">
           </div>
           
           <!-- BADGE TAG -->
@@ -813,7 +763,7 @@
           <!-- DESCRIPTION TEXTAREA -->
           <div class="col-span-2">
             <label class="block font-medium text-slate-500 mb-1">Description</label>
-            <textarea id="propDescInput" rows="2" placeholder="Panoramic luxury residence with modern architecture, landscaped gardens, and premium amenities." class="w-full px-3.5 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-royal/20 outline-none"></textarea>
+            <textarea id="propDescInput" rows="2" placeholder="Property description and specifications..." class="w-full px-3.5 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-royal/20 outline-none"></textarea>
           </div>
 
           <!-- COVER IMAGE SECTION: ONE IMAGE WITH UPDATE & DELETE (NO URL LINK TEXT) -->
@@ -845,7 +795,7 @@
               <!-- Populated with clean Lucide line icons, none preselected -->
             </div>
             <div class="flex items-center gap-2">
-              <input id="customAmenityInput" placeholder="Add custom amenity (e.g. EV Charging Station)..." class="flex-1 px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-royal/20 outline-none text-xs">
+              <input id="customAmenityInput" placeholder="Add custom amenity..." class="flex-1 px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-royal/20 outline-none text-xs">
               <button type="button" onclick="addCustomAmenity()" class="px-4 py-2 bg-royal hover:bg-royal-hover text-white rounded-xl text-xs font-bold transition-all">
                 + Add
               </button>
@@ -898,11 +848,11 @@
       <div class="p-6 space-y-4 text-xs">
         <div>
           <label class="block font-medium text-slate-500 mb-1">Banner Headline</label>
-          <input id="bannerTitleInput" placeholder="e.g. Find Your Dream Luxury Home in Chennai" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-royal/20 outline-none">
+          <input id="bannerTitleInput" placeholder="Banner headline" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-royal/20 outline-none">
         </div>
         <div>
           <label class="block font-medium text-slate-500 mb-1">Subtitle / Callout</label>
-          <input id="bannerSubInput" placeholder="e.g. Explore hand-picked luxury apartments and gated villas" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-royal/20 outline-none">
+          <input id="bannerSubInput" placeholder="Subtitle or brief callout" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-royal/20 outline-none">
         </div>
 
         <div>
@@ -913,7 +863,7 @@
             <p class="text-slate-400 text-[11px] mt-0.5">or click to browse local files (JPG, PNG)</p>
             <input type="file" id="bannerFileInput" accept="image/*" class="hidden">
           </div>
-          <input id="bannerUrlInput" placeholder="Or enter banner image URL..." class="w-full px-3.5 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-royal/20 outline-none mt-2 text-[11px]">
+          <input id="bannerUrlInput" placeholder="Image URL (optional)" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-royal/20 outline-none mt-2 text-[11px]">
         </div>
       </div>
       <div class="px-6 py-4 bg-white border-t border-slate-200 flex items-center justify-end gap-3">
@@ -939,11 +889,11 @@
         
         <div>
           <label class="block font-medium text-slate-500 mb-1">Client Name</label>
-          <input id="testNameInput" placeholder="Enter client name" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-royal/20 outline-none">
+          <input id="testNameInput" placeholder="Client name" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-royal/20 outline-none">
         </div>
 
         <div>
-          <label class="block font-medium text-slate-500 mb-1.5">Rating (Click to select)</label>
+          <label class="block font-medium text-slate-500 mb-1.5">Rating</label>
           <div class="flex items-center gap-1.5 text-amber-400" id="starRatingSelector">
             <!-- 5 Clickable Stars generated dynamically -->
           </div>
@@ -951,13 +901,13 @@
         </div>
 
         <div>
-          <label class="block font-medium text-slate-500 mb-1">Location / Community</label>
-          <input id="testLocationInput" placeholder="Enter city or area (e.g. Porur, Chennai)" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-royal/20 outline-none">
+          <label class="block font-medium text-slate-500 mb-1">Location</label>
+          <input id="testLocationInput" placeholder="Location" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-royal/20 outline-none">
         </div>
 
         <div>
           <label class="block font-medium text-slate-500 mb-1">Client Feedback</label>
-          <textarea id="testFeedbackInput" rows="3" placeholder="Enter client feedback review..." class="w-full px-3.5 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-royal/20 outline-none"></textarea>
+          <textarea id="testFeedbackInput" rows="3" placeholder="Client feedback review" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-royal/20 outline-none"></textarea>
         </div>
       </div>
       <div class="px-6 py-4 bg-white border-t border-slate-200 flex items-center justify-end gap-3">
@@ -981,15 +931,15 @@
       <div class="p-6 space-y-3.5 text-xs">
         <div>
           <label class="block font-medium text-slate-500 mb-1">Display Name</label>
-          <input id="newAccName" placeholder="e.g. Ramesh Krishnan" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-royal/20 outline-none">
+          <input id="newAccName" placeholder="Display name" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-royal/20 outline-none">
         </div>
         <div>
           <label class="block font-medium text-slate-500 mb-1">Username</label>
-          <input id="newAccUsername" placeholder="e.g. ramesh" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-royal/20 outline-none">
+          <input id="newAccUsername" placeholder="Username" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-royal/20 outline-none">
         </div>
         <div>
           <label class="block font-medium text-slate-500 mb-1">Temporary Password</label>
-          <input id="newAccPassword" type="password" placeholder="Enter password" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-royal/20 outline-none">
+          <input id="newAccPassword" type="password" placeholder="Password" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-royal/20 outline-none">
         </div>
         <div>
           <label class="block font-medium text-slate-500 mb-1">Assigned Role</label>
@@ -1071,6 +1021,53 @@
     </div>
   </div>
 
+    <!-- ======================================================== -->
+  <!-- MODAL: CHANGE PASSWORD OVERLAY                           -->
+  <!-- ======================================================== -->
+  <div class="fixed inset-0 bg-navy-900/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4 modal-overlay" id="changePasswordModal">
+    <div class="bg-white rounded-2xl w-full max-w-md shadow-2xl border border-slate-200 overflow-hidden">
+      <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+        <h2 class="font-sans font-bold text-navy-900 text-base">Change Password</h2>
+        <button onclick="closeModal('changePasswordModal')" class="p-1 rounded-lg text-slate-400 hover:text-navy-900">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <form onsubmit="handlePasswordChangeSubmit(event)" class="p-6 space-y-4 text-xs">
+        <div>
+          <label class="block font-medium text-slate-500 mb-1">Current Password</label>
+          <div class="relative">
+            <input id="modalCurPassword" type="password" required placeholder="Current password" class="w-full pl-3.5 pr-10 py-2.5 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-royal/20 font-medium">
+            <button type="button" onclick="togglePasswordVisibility('modalCurPassword', 'curPwEyeIcon')" class="absolute right-3 top-2.5 text-slate-400 hover:text-navy-900 p-0.5">
+              <i data-lucide="eye" id="curPwEyeIcon" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+        <div>
+          <label class="block font-medium text-slate-500 mb-1">New Password</label>
+          <div class="relative">
+            <input id="modalNewPassword" type="password" required placeholder="New password" class="w-full pl-3.5 pr-10 py-2.5 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-royal/20 font-medium">
+            <button type="button" onclick="togglePasswordVisibility('modalNewPassword', 'newPwEyeIcon')" class="absolute right-3 top-2.5 text-slate-400 hover:text-navy-900 p-0.5">
+              <i data-lucide="eye" id="newPwEyeIcon" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+        <div>
+          <label class="block font-medium text-slate-500 mb-1">Confirm New Password</label>
+          <div class="relative">
+            <input id="modalConfirmPassword" type="password" required placeholder="Confirm new password" class="w-full pl-3.5 pr-10 py-2.5 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-royal/20 font-medium">
+            <button type="button" onclick="togglePasswordVisibility('modalConfirmPassword', 'confPwEyeIcon')" class="absolute right-3 top-2.5 text-slate-400 hover:text-navy-900 p-0.5">
+              <i data-lucide="eye" id="confPwEyeIcon" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+        <div class="pt-3 flex items-center justify-end gap-2 border-t border-slate-100">
+          <button type="button" onclick="closeModal('changePasswordModal')" class="px-4 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-100">Cancel</button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-royal hover:bg-royal-hover text-white text-xs font-bold shadow-md shadow-royal/25">Update Password</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- TOAST NOTIFICATION -->
   <div id="toast" class="fixed bottom-6 right-6 z-50 bg-navy-900 text-white px-4 py-2.5 rounded-xl shadow-2xl text-xs font-bold flex items-center gap-2 transform translate-y-20 opacity-0 transition-all duration-300 border border-white/10">
     <i data-lucide="check-circle" class="w-4 h-4 text-emerald"></i>
@@ -1089,7 +1086,7 @@
     const img5 = 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80';
     const img6 = 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1200&q=80';
 
-    // 10 UNIQUE PROPERTIES: 4 HAVE COVER IMAGES, 6 HAVE NO COVER IMAGE (AS REQUESTED)
+    // 10 UNIQUE PROPERTIES: 4 HAVE COVER IMAGES, 6 HAVE NO COVER IMAGE
     const defaultProperties = [
       ['Prestige Bella Vista', 'Porur, Chennai', '₹78 L', 'Featured', 'Apartment · 2 BHK', ['Swimming Pool', 'Covered Parking', '24/7 Security'], img1, 'Premium gated community with 30+ lifestyle amenities.'],
       ['Casagrand Zenith', 'Medavakkam', '₹1.25 Cr', 'Special Offer', 'Villa · 3 BHK', ['Private Garden', 'Swimming Pool', 'Clubhouse & Gym'], img2, 'Contemporary Mediterranean style villa with private lawn.'],
@@ -1103,57 +1100,11 @@
       ['Ceebros Boulevard', 'Thiruvanmiyur', '₹1.45 Cr', 'None', 'Apartment · 3 BHK', ['Swimming Pool', 'Covered Parking'], '', 'Boutique sea-breeze apartments steps from the coastal boulevard.']
     ];
 
-    // Centralized Persistent Catalog Store (in localStorage & exportable JSON)
+    // Centralized Background Persistent Store
     let properties = JSON.parse(localStorage.getItem('vv_properties_catalog')) || defaultProperties;
 
     function savePropertiesToStorage() {
       localStorage.setItem('vv_properties_catalog', JSON.stringify(properties));
-    }
-
-    function exportPortfolioJson() {
-      const exportPayload = {
-        exportDate: new Date().toISOString(),
-        system: 'V.V Properties Executive Suite',
-        properties: properties,
-        totalProperties: properties.length
-      };
-      const blob = new Blob([JSON.stringify(exportPayload, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'vv_properties_catalog.json';
-      a.click();
-      URL.revokeObjectURL(url);
-      logActivity('Exported full properties catalog JSON bundle', 'Properties');
-      showToast('Downloaded vv_properties_catalog.json');
-    }
-
-    function importPortfolioJson(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        try {
-          const data = JSON.parse(e.target.result);
-          if (Array.isArray(data.properties)) {
-            properties = data.properties;
-          } else if (Array.isArray(data)) {
-            properties = data;
-          } else {
-            alert('Invalid catalog format. File must contain property listings.');
-            return;
-          }
-          savePropertiesToStorage();
-          renderProperties();
-          const syncBanner = document.getElementById('deviceSyncBanner');
-          if (syncBanner) syncBanner.classList.add('hidden');
-          logActivity(`Imported portfolio catalog (${properties.length} properties) from file`, 'Properties');
-          showToast(`Loaded ${properties.length} properties successfully`);
-        } catch (err) {
-          alert('Error parsing catalog JSON: ' + err.message);
-        }
-      };
-      reader.readAsText(file);
     }
 
     let currentGalleryImages = [img1, img2, img3, img4, img5];
@@ -1164,11 +1115,11 @@
     // 1. AUTHENTICATION (STRICT 24-HR EXPIRY FOR NON-ADMIN)
     // =========================================================
     const defaultAccounts = [
-      { name: 'Victor Paul', username: 'victor', role: 'Super Administrator', status: 'Active', created: '14 Nov 2026' },
-      { name: 'Saran', username: 'saran', role: 'Property Manager', status: 'Active', created: '14 Nov 2026' },
-      { name: 'Vibhkar', username: 'vibhkar', role: 'Sales Executive', status: 'Active', created: '14 Nov 2026' },
-      { name: 'Umeshwar', username: 'umeshwar', role: 'Marketing Lead', status: 'Active', created: '14 Nov 2026' },
-      { name: 'Sharmika', username: 'sharmika', role: 'Portfolio Director', status: 'Active', created: '14 Nov 2026' }
+      { name: 'Victor Paul', username: 'victor', role: 'Super Administrator', status: 'Active', created: '15 Nov 2026' },
+      { name: 'Saran', username: 'saran', role: 'Property Manager', status: 'Active', created: '15 Nov 2026' },
+      { name: 'Vibhkar', username: 'vibhkar', role: 'Sales Executive', status: 'Active', created: '15 Nov 2026' },
+      { name: 'Umeshwar', username: 'umeshwar', role: 'Marketing Lead', status: 'Active', created: '15 Nov 2026' },
+      { name: 'Sharmika', username: 'sharmika', role: 'Portfolio Director', status: 'Active', created: '15 Nov 2026' }
     ];
 
     let accounts = JSON.parse(localStorage.getItem('vv_accounts')) || defaultAccounts;
@@ -1182,7 +1133,6 @@
           const now = Date.now();
           const isAdmin = (auth.username && auth.username.toLowerCase() === 'victor') || (auth.role === 'Super Administrator');
 
-          // Strict 24-Hour Expiry for non-admin users
           if (!isAdmin && auth.expiry && now > auth.expiry) {
             localStorage.removeItem('vv_auth');
             document.cookie = 'vv_auth=; path=/; max-age=0';
@@ -1207,8 +1157,6 @@
     function applyUserToUI(u) {
       document.getElementById('topDisplayName').textContent = u.displayName || 'Victor Paul';
       document.getElementById('topRoleName').textContent = u.role || 'Super Administrator';
-      document.getElementById('sideDisplayName').textContent = u.displayName || 'Victor Paul';
-      document.getElementById('sideRoleName').textContent = u.role || 'Super Administrator';
       
       const savedAvatar = localStorage.getItem('vv_admin_avatar');
       if (savedAvatar) {
@@ -1216,7 +1164,6 @@
       } else {
         const initial = (u.displayName || 'V').charAt(0).toUpperCase();
         document.getElementById('topAvatarInitial').textContent = initial;
-        document.getElementById('sideAvatarInitial').textContent = initial;
       }
       
       const adminNameInput = document.getElementById('adminDisplayNameInput');
@@ -1269,7 +1216,7 @@
     }
 
     // =========================================================
-    // 2. ACTIVITY LOGS (EXACT DATE & TIME, PERSISTENT FOR ALL)
+    // 2. ACTIVITY LOGS (ALL ACCOUNTS, EXACT TIMESTAMPS)
     // =========================================================
     function formatExactDateTime(d = new Date()) {
       const day = String(d.getDate()).padStart(2, '0');
@@ -1286,14 +1233,14 @@
     }
 
     let activityLogs = JSON.parse(localStorage.getItem('vv_activity_logs_json')) || [
-      { id: 1, timestamp: Date.now() - 10 * 60 * 1000, username: 'Victor Paul', action: 'Updated testimonial from "Meena R"', module: 'Testimonials', dateStr: '14 Nov 2026, 10:45:12 PM', status: 'Success' },
-      { id: 2, timestamp: Date.now() - 25 * 60 * 1000, username: 'Victor Paul', action: 'Reviewed new inquiry from Suresh Kumar (Label moved to None)', module: 'Enquiries', dateStr: '14 Nov 2026, 10:20:45 PM', status: 'Success' },
-      { id: 3, timestamp: Date.now() - 40 * 60 * 1000, username: 'Victor Paul', action: 'Deactivated carousel banner "A Better Address for Your Growing Family"', module: 'Banners', dateStr: '14 Nov 2026, 09:55:00 PM', status: 'Success' },
-      { id: 4, timestamp: Date.now() - 55 * 60 * 1000, username: 'Victor Paul', action: 'Deactivated carousel banner "Find Your Dream Luxury Home in Chennai"', module: 'Banners', dateStr: '14 Nov 2026, 09:12:30 PM', status: 'Success' },
-      { id: 5, timestamp: Date.now() - 70 * 60 * 1000, username: 'Victor Paul', action: 'User "Victor Paul" signed in to portal', module: 'Authentication', dateStr: '14 Nov 2026, 08:34:10 PM', status: 'Success' },
-      { id: 6, timestamp: Date.now() - 2 * 3600 * 1000, username: 'Victor Paul', action: 'Reviewed lead dossier for Suresh Kumar', module: 'Enquiries', dateStr: '14 Nov 2026, 07:15:22 PM', status: 'Success' },
-      { id: 7, timestamp: Date.now() - 4 * 3600 * 1000, username: 'Victor Paul', action: 'Updated listing price for Emerald Bay Villas to ₹1.85 Cr', module: 'Properties', dateStr: '14 Nov 2026, 06:40:18 PM', status: 'Success' },
-      { id: 8, timestamp: Date.now() - 24 * 3600 * 1000, username: 'Sharmika Murugesan', action: 'Reordered carousel slide display priority', module: 'Banners', dateStr: '13 Nov 2026, 04:30:00 PM', status: 'Success' }
+      { id: 1, timestamp: Date.now() - 5 * 60 * 1000, username: 'Victor Paul', action: 'Approved listing publication for Casagrand Zenith', module: 'Properties', dateStr: '15 Nov 2026, 10:22:15 AM', status: 'Success' },
+      { id: 2, timestamp: Date.now() - 25 * 60 * 1000, username: 'Saran', action: 'Updated site visit schedule for Suresh Kumar', module: 'Enquiries', dateStr: '15 Nov 2026, 10:02:40 AM', status: 'Success' },
+      { id: 3, timestamp: Date.now() - 45 * 60 * 1000, username: 'Vibhkar', action: 'Followed up with lead Meena Priya (Villa · 3 BHK)', module: 'Enquiries', dateStr: '15 Nov 2026, 09:42:18 AM', status: 'Success' },
+      { id: 4, timestamp: Date.now() - 65 * 60 * 1000, username: 'Umeshwar', action: 'Published carousel banner "Find Your Dream Luxury Home in Chennai"', module: 'Banners', dateStr: '15 Nov 2026, 09:22:05 AM', status: 'Success' },
+      { id: 5, timestamp: Date.now() - 90 * 60 * 1000, username: 'Sharmika', action: 'Curated 5 new verified client reviews in Testimonials', module: 'Testimonials', dateStr: '15 Nov 2026, 08:55:12 AM', status: 'Success' },
+      { id: 6, timestamp: Date.now() - 120 * 60 * 1000, username: 'Victor Paul', action: 'User "Victor Paul" signed in to executive session', module: 'Authentication', dateStr: '15 Nov 2026, 08:25:30 AM', status: 'Success' },
+      { id: 7, timestamp: Date.now() - 4 * 3600 * 1000, username: 'Saran', action: 'Verified CMDA documents for TVS Emerald Greenacres', module: 'Properties', dateStr: '14 Nov 2026, 06:40:18 PM', status: 'Success' },
+      { id: 8, timestamp: Date.now() - 14 * 3600 * 1000, username: 'Sharmika', action: 'Reordered carousel slide display priority to 5/10 active', module: 'Banners', dateStr: '14 Nov 2026, 08:30:00 AM', status: 'Success' }
     ];
 
     function pruneActivityLogs() {
@@ -1473,7 +1420,7 @@
     });
 
     // =========================================================
-    // 4. ADD / EDIT PROPERTY MODAL (APT LINE ICONS FOR AMENITIES)
+    // 4. ADD / EDIT PROPERTY MODAL (FUNCTIONAL CUSTOM AMENITIES)
     // =========================================================
     const availableAmenities = [
       { name: 'Bedrooms', icon: 'bed-double' },
@@ -1515,7 +1462,7 @@
       container.innerHTML = availableAmenities.map(a => {
         const selected = currentAmenitiesList.includes(a.name);
         return `
-          <button type="button" onclick="toggleAmenity('${a.name}')" class="p-2 rounded-xl border text-left flex items-center gap-2 transition-all ${selected ? 'border-royal bg-royal/10 text-royal font-bold shadow-sm' : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 font-medium'}">
+          <button type="button" onclick="toggleAmenity('${a.name}')" class="p-2 rounded-xl border text-left flex items-center gap-2 transition-all cursor-pointer ${selected ? 'border-royal bg-royal/10 text-royal font-bold shadow-sm' : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 font-medium'}">
             <i data-lucide="${a.icon}" class="w-4 h-4 flex-shrink-0"></i>
             <span class="text-xs truncate">${a.name}</span>
           </button>
@@ -1536,12 +1483,19 @@
 
     function addCustomAmenity() {
       const input = document.getElementById('customAmenityInput');
+      if (!input) return;
       const val = input.value.trim();
-      if (val && !currentAmenitiesList.includes(val)) {
+      if (!val) return;
+      if (!currentAmenitiesList.includes(val)) {
         currentAmenitiesList.push(val);
-        input.value = '';
-        renderPresetAmenities();
       }
+      if (!availableAmenities.some(a => a.name.toLowerCase() === val.toLowerCase())) {
+        availableAmenities.push({ name: val, icon: getAmenityIcon(val) });
+      }
+      input.value = '';
+      renderPresetAmenities();
+      renderAmenitiesChips();
+      lucide.createIcons();
     }
 
     function renderAmenitiesChips() {
@@ -1555,7 +1509,7 @@
         <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-royal/10 text-royal text-xs font-bold border border-royal/20">
           <i data-lucide="${getAmenityIcon(a)}" class="w-3.5 h-3.5 flex-shrink-0"></i>
           <span>${a}</span>
-          <button type="button" onclick="toggleAmenity('${a}')" class="hover:text-red-500 font-bold ml-1">&times;</button>
+          <button type="button" onclick="toggleAmenity('${a}')" class="hover:text-red-500 font-bold ml-1 cursor-pointer">&times;</button>
         </span>
       `).join('');
       lucide.createIcons();
@@ -1577,11 +1531,11 @@
               <p class="font-bold text-navy-900">Current Cover Image</p>
               <p class="text-[11px] text-slate-400">Custom architectural photo</p>
             </div>
-            <button type="button" onclick="document.getElementById('propCoverFileInput').click()" class="px-3 py-1.5 rounded-xl border border-slate-200 text-slate-700 font-bold text-xs hover:bg-slate-50 transition-colors flex items-center gap-1.5">
+            <button type="button" onclick="document.getElementById('propCoverFileInput').click()" class="px-3 py-1.5 rounded-xl border border-slate-200 text-slate-700 font-bold text-xs hover:bg-slate-50 transition-colors flex items-center gap-1.5 cursor-pointer">
               <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-royal"></i>
               <span>Update</span>
             </button>
-            <button type="button" onclick="deleteCoverImage()" class="px-3 py-1.5 rounded-xl border border-red-200 text-red-600 font-bold text-xs hover:bg-red-50 transition-colors flex items-center gap-1.5">
+            <button type="button" onclick="deleteCoverImage()" class="px-3 py-1.5 rounded-xl border border-red-200 text-red-600 font-bold text-xs hover:bg-red-50 transition-colors flex items-center gap-1.5 cursor-pointer">
               <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
               <span>Delete</span>
             </button>
@@ -1615,8 +1569,8 @@
             <div class="relative h-20 rounded-xl overflow-hidden border border-slate-200 shadow-sm group">
               <img src="${imgUrl}" alt="Gallery ${idx+1}" class="w-full h-full object-cover">
               <div class="absolute inset-0 bg-navy-950/80 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1 p-1">
-                <button type="button" onclick="triggerGalleryUpdate(${idx})" class="w-full py-0.5 rounded bg-white text-navy-900 font-bold text-[9px] hover:bg-slate-100">Update</button>
-                <button type="button" onclick="deleteGalleryImage(${idx})" class="w-full py-0.5 rounded bg-red-600 text-white font-bold text-[9px] hover:bg-red-700">Delete</button>
+                <button type="button" onclick="triggerGalleryUpdate(${idx})" class="w-full py-0.5 rounded bg-white text-navy-900 font-bold text-[9px] hover:bg-slate-100 cursor-pointer">Update</button>
+                <button type="button" onclick="deleteGalleryImage(${idx})" class="w-full py-0.5 rounded bg-red-600 text-white font-bold text-[9px] hover:bg-red-700 cursor-pointer">Delete</button>
               </div>
             </div>
           `;
@@ -1793,15 +1747,29 @@
     }
 
     // =========================================================
-    // 5. BANNER MANAGEMENT (NO ACTIVE / INACTIVE TEXT BADGES)
+    // 5. BANNER MANAGEMENT: 10 BANNERS & DYNAMIC COUNTER
     // =========================================================
     let banners = [
-      { id: 1, title: 'Find Your Dream Luxury Home in Chennai', sub: 'Explore hand-picked luxury apartments and gated villas across OMR & ECR.', img: img1, active: true },
-      { id: 2, title: 'A Better Address for Your Growing Family', sub: 'Discover tranquil gated communities with private gardens and clubhouses.', img: img2, active: true },
-      { id: 3, title: 'Luxury Beachfront Residences on ECR', sub: 'Wake up to panoramic Bay of Bengal ocean vistas with private rooftop decks.', img: img3, active: true },
-      { id: 4, title: 'Prime Commercial & IT Hubs in Guindy & OMR', sub: 'Grade-A tech parks and retail storefronts with unmatched arterial road access.', img: img4, active: true },
-      { id: 5, title: 'Pre-Launch Privileges: Garden County Medavakkam', sub: 'Exclusive investor pricing and customizable floor plans before public launch.', img: img5, active: true }
+      { id: 1, title: 'Find Your Dream Luxury Home in Chennai', sub: 'Curated luxury residences and villas across OMR & ECR.', img: img1, active: true },
+      { id: 2, title: 'A Better Address for Your Growing Family', sub: 'Tranquil gated communities with private gardens and clubhouses.', img: img2, active: true },
+      { id: 3, title: 'Luxury Beachfront Residences on ECR', sub: 'Panoramic ocean vistas with private rooftop plunge decks.', img: img3, active: true },
+      { id: 4, title: 'Prime Commercial & IT Hubs in Guindy & OMR', sub: 'Grade-A tech parks and corporate headquarters.', img: img4, active: true },
+      { id: 5, title: 'Pre-Launch Privileges: Garden County Medavakkam', sub: 'Exclusive investor pricing and customizable floor plans.', img: img5, active: true },
+      { id: 6, title: 'Emerald Bay Waterfront Penthouses', sub: 'Ultra-exclusive duplex residences overlooking coastal lagoons.', img: img6, active: false },
+      { id: 7, title: 'Skyline City Residences Vadapalani', sub: 'Prime high-rise towers next to metro and lifestyle hubs.', img: img1, active: false },
+      { id: 8, title: 'Grand Heritage Plots Tambaram', sub: 'CMDA and RERA approved gated villa plots with arterial connectivity.', img: img2, active: false },
+      { id: 9, title: 'Oceanique Coastal Enclave Kovalam', sub: 'Private beachfront villas with landscaped lawns and private access.', img: img3, active: false },
+      { id: 10, title: 'Prestige Boulevard Sholinganallur', sub: 'Contemporary smart homes in the center of the IT corridor.', img: img4, active: false }
     ];
+
+    function updateBannersCounter() {
+      const activeCount = banners.filter(b => b.active).length;
+      const totalCount = banners.length;
+      const counterEl = document.getElementById('activeBannersCounter');
+      if (counterEl) {
+        counterEl.textContent = `${activeCount}/${totalCount}`;
+      }
+    }
 
     function renderBanners() {
       const list = document.getElementById('bannersList');
@@ -1816,15 +1784,16 @@
             </div>
           </div>
           <div class="flex items-center gap-2 flex-shrink-0">
-            <button onclick="toggleBannerActive(${i})" class="px-3 py-1.5 rounded-xl text-xs font-bold border transition-colors ${b.active ? 'text-red-500 hover:text-red-600 hover:bg-red-50 border-red-200/60' : 'text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 border-emerald-200/60'}">
+            <button onclick="toggleBannerActive(${i})" class="px-3 py-1.5 rounded-xl text-xs font-bold border transition-colors cursor-pointer ${b.active ? 'text-red-500 hover:text-red-600 hover:bg-red-50 border-red-200/60' : 'text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 border-emerald-200/60'}">
               ${b.active ? 'Deactivate' : 'Activate'}
             </button>
-            <button onclick="deleteBanner(${i})" class="p-2 rounded-xl text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors">
+            <button onclick="deleteBanner(${i})" class="p-2 rounded-xl text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors cursor-pointer">
               <i data-lucide="trash-2" class="w-4 h-4"></i>
             </button>
           </div>
         </div>
       `).join('');
+      updateBannersCounter();
       lucide.createIcons();
     }
 
@@ -1871,19 +1840,19 @@
     }
 
     // =========================================================
-    // 6. ENQUIRIES (WHATSAPP WITH COUNTRY CODE + 3 PRIORITY LEADS)
+    // 6. ENQUIRIES (4 PRIORITY LEADS DISPLAYED)
     // =========================================================
     let enquiries = [
-      { name: 'Suresh Kumar', phone: '+91 98765 43210', email: 'suresh@gmail.com', property: 'Prestige Bella Vista', location: 'Porur, Chennai', date: '14 Nov 2026, 10:24 AM', status: 'New' },
-      { name: 'Meena Priya', phone: '+91 98765 12340', email: 'meena@gmail.com', property: 'Casagrand Zenith', location: 'Medavakkam', date: '14 Nov 2026, 03:15 PM', status: 'New' },
-      { name: 'Rohit Sharma', phone: '+91 99887 66554', email: 'rohit@gmail.com', property: 'TVS Emerald Greenacres', location: 'Tambaram', date: '14 Nov 2026, 11:05 AM', status: 'New' },
-      { name: 'Ananya Deshmukh', phone: '+91 98401 22334', email: 'ananya@outlook.com', property: 'Oceanique Beachfront', location: 'ECR, Chennai', date: '13 Nov 2026, 04:40 PM', status: 'New' },
-      { name: 'Karthik Subramanian', phone: '+91 97910 88776', email: 'karthik@techcorp.in', property: 'Olympia Technology Park', location: 'Guindy, Chennai', date: '13 Nov 2026, 01:20 PM', status: 'Closed' },
-      { name: 'Deepak Raj', phone: '+91 98412 34567', email: 'deepak.raj@gmail.com', property: 'Appaswamy Trellis', location: 'Vadapalani', date: '12 Nov 2026, 09:15 AM', status: 'Contacted' },
-      { name: 'Lakshmi Narayanan', phone: '+91 99620 44332', email: 'lakshmi@zoho.com', property: 'Akshaya Today', location: 'OMR, Chennai', date: '12 Nov 2026, 04:50 PM', status: 'Contacted' },
-      { name: 'Vikram Seth', phone: '+91 98840 77889', email: 'vikram.seth@gmail.com', property: 'Radiance Empire', location: 'Perambur', date: '11 Nov 2026, 11:30 AM', status: 'Closed' },
-      { name: 'Divya Bharathi', phone: '+91 97100 55667', email: 'divya.b@yahoo.com', property: 'Brigade Xanadu', location: 'Mogappair', date: '10 Nov 2026, 02:45 PM', status: 'Contacted' },
-      { name: 'Arjun Venkatesh', phone: '+91 99401 11223', email: 'arjun.v@gmail.com', property: 'Ceebros Boulevard', location: 'Thiruvanmiyur', date: '09 Nov 2026, 06:10 PM', status: 'Closed' }
+      { name: 'Suresh Kumar', phone: '+91 98765 43210', email: 'suresh@gmail.com', property: 'Prestige Bella Vista', location: 'Porur, Chennai', date: '15 Nov 2026, 10:24 AM', status: 'New' },
+      { name: 'Meena Priya', phone: '+91 98765 12340', email: 'meena@gmail.com', property: 'Casagrand Zenith', location: 'Medavakkam', date: '15 Nov 2026, 03:15 PM', status: 'New' },
+      { name: 'Rohit Sharma', phone: '+91 99887 66554', email: 'rohit@gmail.com', property: 'TVS Emerald Greenacres', location: 'Tambaram', date: '15 Nov 2026, 11:05 AM', status: 'New' },
+      { name: 'Ananya Deshmukh', phone: '+91 98401 22334', email: 'ananya@outlook.com', property: 'Oceanique Beachfront', location: 'ECR, Chennai', date: '14 Nov 2026, 04:40 PM', status: 'New' },
+      { name: 'Karthik Subramanian', phone: '+91 97910 88776', email: 'karthik@techcorp.in', property: 'Olympia Technology Park', location: 'Guindy, Chennai', date: '14 Nov 2026, 01:20 PM', status: 'Closed' },
+      { name: 'Deepak Raj', phone: '+91 98412 34567', email: 'deepak.raj@gmail.com', property: 'Appaswamy Trellis', location: 'Vadapalani', date: '13 Nov 2026, 09:15 AM', status: 'Contacted' },
+      { name: 'Lakshmi Narayanan', phone: '+91 99620 44332', email: 'lakshmi@zoho.com', property: 'Akshaya Today', location: 'OMR, Chennai', date: '13 Nov 2026, 04:50 PM', status: 'Contacted' },
+      { name: 'Vikram Seth', phone: '+91 98840 77889', email: 'vikram.seth@gmail.com', property: 'Radiance Empire', location: 'Perambur', date: '12 Nov 2026, 11:30 AM', status: 'Closed' },
+      { name: 'Divya Bharathi', phone: '+91 97100 55667', email: 'divya.b@yahoo.com', property: 'Brigade Xanadu', location: 'Mogappair', date: '11 Nov 2026, 02:45 PM', status: 'Contacted' },
+      { name: 'Arjun Venkatesh', phone: '+91 99401 11223', email: 'arjun.v@gmail.com', property: 'Ceebros Boulevard', location: 'Thiruvanmiyur', date: '10 Nov 2026, 06:10 PM', status: 'Closed' }
     ];
 
     function renderEnquiries() {
@@ -1924,11 +1893,11 @@
       if (dashBadge) dashBadge.textContent = newCount;
     }
 
-    // PRIORITY LEADS: EXACTLY 3 LEADS WITH 'NEW' STATUS
+    // PRIORITY LEADS: EXACTLY 4 LEADS WITH 'NEW' STATUS
     function renderPriorityLeads() {
       const list = document.getElementById('priorityLeadsList');
       if (!list) return;
-      const newOnly = enquiries.filter(e => e.status === 'New').slice(0, 3);
+      const newOnly = enquiries.filter(e => e.status === 'New').slice(0, 4);
       list.innerHTML = newOnly.map(enq => {
         const originalIndex = enquiries.indexOf(enq);
         return `
@@ -1960,7 +1929,6 @@
       document.getElementById('eEmail').textContent = enq.email;
       document.getElementById('eAvatar').textContent = enq.name.charAt(0);
       
-      // WhatsApp link with country code prefix (e.g. 919876543210)
       const rawDigits = enq.phone.replace(/[^0-9]/g, '');
       const formattedPhone = rawDigits.startsWith('91') ? rawDigits : ('91' + rawDigits);
       document.getElementById('whatsappLink').href = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(`Hello ${enq.name}, thank you for contacting V.V Properties regarding ${enq.property}.`)}`;
@@ -1982,14 +1950,19 @@
     }
 
     // =========================================================
-    // 7. TESTIMONIALS (5 CLICKABLE STARS, NO *)
+    // 7. TESTIMONIALS (8 CLIENTS, 5 CLEAN CLICKABLE STARS)
     // =========================================================
     let selectedRatingStars = 5;
 
     let testimonials = [
       { name: 'Dr. Arvind Swaminathan', location: 'Porur, Chennai', stars: 5, quote: 'Outstanding service and transparency throughout our purchase at Prestige Bella Vista. Clear CMDA paperwork and timely handover.' },
       { name: 'Kavitha Ramachandran', location: 'Medavakkam', stars: 5, quote: 'The executive team provided personalized site visits and detailed architect consultations. Very pleased with our luxury villa investment.' },
-      { name: 'Rajesh Khanna', location: 'ECR, Chennai', stars: 5, quote: 'V.V Properties delivered on every milestone. Seamless legal verification and professional registration assistance.' }
+      { name: 'Rajesh Khanna', location: 'ECR, Chennai', stars: 5, quote: 'V.V Properties delivered on every milestone. Seamless legal verification and professional registration assistance.' },
+      { name: 'Sundar Raghavan', location: 'OMR, Chennai', stars: 5, quote: 'Smooth documentation and clear title deeds for our beachfront villa on ECR. Highly recommended team.' },
+      { name: 'Priya Venkatesh', location: 'Adyar, Chennai', stars: 5, quote: 'Exceptional assistance throughout the site selection and legal verification process for our luxury duplex.' },
+      { name: 'Manoj Krishnan', location: 'Anna Nagar, Chennai', stars: 5, quote: 'Transparent pricing with no hidden charges. Handover happened exactly on the promised schedule.' },
+      { name: 'Deepa Senthil', location: 'Velachery, Chennai', stars: 5, quote: 'The customer relationship team was attentive and guided us seamlessly from booking to key handover.' },
+      { name: 'Anand Balaji', location: 'Nungambakkam, Chennai', stars: 5, quote: 'Top-tier real estate portfolio in Chennai. Quality construction and premium amenities as promised.' }
     ];
 
     function renderStarRatingSelector(val = 5) {
@@ -2001,14 +1974,13 @@
       for (let s = 1; s <= 5; s++) {
         const fill = s <= selectedRatingStars ? 'currentColor' : 'none';
         starsHtml += `
-          <button type="button" onclick="setTestimonialStars(${s})" class="p-1 hover:scale-125 transition-transform focus:outline-none">
+          <button type="button" onclick="setTestimonialStars(${s})" class="p-1 hover:scale-125 transition-transform focus:outline-none cursor-pointer">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="${fill}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-star">
               <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
             </svg>
           </button>
         `;
       }
-      starsHtml += `<span class="text-xs font-bold text-slate-700 ml-2">${selectedRatingStars} / 5 Stars</span>`;
       container.innerHTML = starsHtml;
     }
 
@@ -2027,10 +1999,10 @@
         return `
           <div class="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between relative group">
             <div class="absolute top-4 right-4 flex items-center gap-1">
-              <button onclick="editTestimonial(${i})" title="Edit Testimonial" class="p-1.5 rounded-lg text-slate-400 hover:text-royal hover:bg-royal/5 transition-colors">
+              <button onclick="editTestimonial(${i})" title="Edit Testimonial" class="p-1.5 rounded-lg text-slate-400 hover:text-royal hover:bg-royal/5 transition-colors cursor-pointer">
                 <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
               </button>
-              <button onclick="deleteTestimonial(${i})" title="Delete Testimonial" class="p-1.5 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors">
+              <button onclick="deleteTestimonial(${i})" title="Delete Testimonial" class="p-1.5 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors cursor-pointer">
                 <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
               </button>
             </div>
@@ -2133,7 +2105,7 @@
           <td class="px-4 py-3 text-slate-400 font-medium">${acc.created}</td>
           <td class="px-4 py-3 text-right">
             ${acc.username === 'victor' ? '<span class="text-slate-400 text-[10px]">Primary</span>' : `
-              <button onclick="deleteAccount(${i})" class="text-red-500 hover:underline font-bold text-[11px]">Remove</button>
+              <button onclick="deleteAccount(${i})" class="text-red-500 hover:underline font-bold text-[11px] cursor-pointer">Remove</button>
             `}
           </td>
         </tr>
@@ -2153,7 +2125,7 @@
         username: username,
         role: role,
         status: 'Active',
-        created: '14 Nov 2026'
+        created: '15 Nov 2026'
       });
       localStorage.setItem('vv_accounts', JSON.stringify(accounts));
       logActivity(`Created team account "${username}" (${role})`, 'Security');
@@ -2173,14 +2145,9 @@
       }
     }
 
-    function togglePasswordSection() {
-      const fields = document.getElementById('passwordFields');
-      fields.classList.toggle('hidden');
-    }
-
-    function toggleAdminPasswordVisibility() {
-      const f = document.getElementById('adminPasswordField');
-      const icon = document.getElementById('adminPwEyeIcon');
+    function togglePasswordVisibility(fieldId, iconId) {
+      const f = document.getElementById(fieldId);
+      const icon = document.getElementById(iconId);
       if (!f) return;
       if (f.type === 'password') {
         f.type = 'text';
@@ -2190,6 +2157,34 @@
         if (icon) icon.setAttribute('data-lucide', 'eye');
       }
       lucide.createIcons();
+    }
+
+    function toggleAdminPasswordVisibility() {
+      togglePasswordVisibility('adminPasswordField', 'adminPwEyeIcon');
+    }
+
+    function handlePasswordChangeSubmit(e) {
+      e.preventDefault();
+      const cur = document.getElementById('modalCurPassword').value;
+      const nw = document.getElementById('modalNewPassword').value;
+      const conf = document.getElementById('modalConfirmPassword').value;
+
+      if (!nw || !conf) {
+        alert('Please enter and confirm your new password.');
+        return;
+      }
+      if (nw !== conf) {
+        alert('New password and confirm password do not match.');
+        return;
+      }
+      
+      document.getElementById('adminPasswordField').value = nw;
+      logActivity('Updated administrator master password', 'Security');
+      closeModal('changePasswordModal');
+      document.getElementById('modalCurPassword').value = '';
+      document.getElementById('modalNewPassword').value = '';
+      document.getElementById('modalConfirmPassword').value = '';
+      showToast('Password updated successfully');
     }
 
     function saveAdminProfile() {
@@ -2207,16 +2202,14 @@
 
     function handleAdminNameChange(val) {
       document.getElementById('topDisplayName').textContent = val || 'Victor Paul';
-      document.getElementById('sideDisplayName').textContent = val || 'Victor Paul';
       const initial = (val || 'V').charAt(0).toUpperCase();
       const savedAvatar = localStorage.getItem('vv_admin_avatar');
       if (!savedAvatar) {
         document.getElementById('topAvatarInitial').textContent = initial;
-        document.getElementById('sideAvatarInitial').textContent = initial;
       }
     }
 
-    // Admin Avatar Upload & Persistent Sync to Header
+    // Dynamic Admin Avatar Sync
     function updateAdminAvatarDisplay(dataUrl) {
       if (!dataUrl) return;
       localStorage.setItem('vv_admin_avatar', dataUrl);
@@ -2232,10 +2225,6 @@
       if (topAvatar) {
         topAvatar.innerHTML = `<img src="${dataUrl}" class="w-full h-full object-cover rounded-full" alt="Avatar">`;
       }
-      const sideAvatar = document.getElementById('sideAvatarInitial');
-      if (sideAvatar) {
-        sideAvatar.innerHTML = `<img src="${dataUrl}" class="w-full h-full object-cover rounded-full" alt="Avatar">`;
-      }
     }
 
     const avatarInput = document.getElementById('adminAvatarFileInput');
@@ -2246,7 +2235,7 @@
           reader.onload = ev => {
             const dataUrl = ev.target.result;
             updateAdminAvatarDisplay(dataUrl);
-            showToast('Profile photo saved & updated');
+            showToast('Profile photo saved and updated in header');
             logActivity('Updated administrator profile photo', 'Security');
           };
           reader.readAsDataURL(avatarInput.files[0]);
@@ -2257,9 +2246,8 @@
     // =========================================================
     // 9. DYNAMIC DENSE GRAPH: EXACT 5 DATE TICKS & DENSE CURVE
     // =========================================================
-    // Calculates 5 milestone dates dynamically from today (14/11/2026 or real Date)
     function generate5DatePoints(rangeKey, customFrom = null, customTo = null) {
-      const now = new Date(2026, 10, 14); // 14 November 2026
+      const now = new Date(); // Dynamic live active date
       let startDate;
       let endDate = new Date(now.getTime());
 
@@ -2268,7 +2256,6 @@
       } else if (rangeKey === '1W') {
         startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
       } else if (rangeKey === '1M') {
-        // Starting 14/10, Ending 14/11
         startDate = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
       } else if (rangeKey === '3M') {
         startDate = new Date(now.getFullYear(), now.getMonth() - 3, now.getDate());
@@ -2287,7 +2274,7 @@
 
       const startMs = startDate.getTime();
       const endMs = endDate.getTime();
-      const step = (endMs - startMs) / 4; // Exactly 5 points
+      const step = (endMs - startMs) / 4;
 
       const labels = [];
       for (let i = 0; i < 5; i++) {
@@ -2353,7 +2340,6 @@
       `).join('');
 
       const xAxis = document.getElementById('chartXAxis');
-      // Exactly 5 dates evenly spaced
       xAxis.innerHTML = labels.map(l => `<span>${l}</span>`).join('');
     }
 
