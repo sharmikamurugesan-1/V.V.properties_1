@@ -1153,46 +1153,50 @@
     // 1. AUTHENTICATION (STRICT 24-HR EXPIRY FOR NON-ADMIN)
     // =========================================================
     const defaultAccounts = [
-      { name: 'Victor Paul', username: 'victor', role: 'Super Administrator', status: 'Active', created: '15 Nov 2026', photo: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80' },
-      { name: 'Saran', username: 'saran', role: 'Property Manager', status: 'Active', created: '15 Nov 2026', photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80' },
-      { name: 'Vibhkar', username: 'vibhkar', role: 'Sales Executive', status: 'Active', created: '15 Nov 2026', photo: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80' },
-      { name: 'Umeshwar', username: 'umeshwar', role: 'Marketing Lead', status: 'Active', created: '15 Nov 2026', photo: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80' },
-      { name: 'Sharmika', username: 'sharmika', role: 'Portfolio Director', status: 'Active', created: '15 Nov 2026', photo: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80' }
+      { name: 'Victor Paul', username: 'victor', role: 'Super Administrator', status: 'Active', created: '15 Nov 2026', photo: null },
+      { name: 'Saran', username: 'saran', role: 'Property Manager', status: 'Active', created: '15 Nov 2026', photo: null },
+      { name: 'Vibhkar', username: 'vibhkar', role: 'Sales Executive', status: 'Active', created: '15 Nov 2026', photo: null },
+      { name: 'Umeshwar', username: 'umeshwar', role: 'Marketing Lead', status: 'Active', created: '15 Nov 2026', photo: null },
+      { name: 'Sharmika', username: 'sharmika', role: 'Portfolio Director', status: 'Active', created: '15 Nov 2026', photo: null }
     ];
 
     let accounts = JSON.parse(localStorage.getItem('vv_accounts')) || defaultAccounts;
     let currentUser = null;
 
     function checkAuth() {
+      // Whenever website opens fresh, ALWAYS require login
+      const sessionActive = sessionStorage.getItem('vv_session_active');
       const stored = localStorage.getItem('vv_auth');
-      if (stored) {
+
+      if (sessionActive === 'true' && stored) {
         try {
           const auth = JSON.parse(stored);
           const now = Date.now();
           const isAdmin = (auth.username && auth.username.toLowerCase() === 'victor') || (auth.role === 'Super Administrator');
 
           if (!isAdmin && auth.expiry && now > auth.expiry) {
-            localStorage.removeItem('vv_auth');
-            document.cookie = 'vv_auth=; path=/; max-age=0';
+            sessionStorage.removeItem('vv_session_active');
+      localStorage.removeItem('vv_auth');
+            sessionStorage.removeItem('vv_session_active');
             currentUser = null;
             document.getElementById('loginScreen').classList.remove('hidden');
-            showToast('Session expired after 24 hours. Please log in again.');
+            showToast('Session expired. Please log in again.');
             return false;
           }
 
-          if (isAdmin || (auth.expiry && auth.expiry > now)) {
-            currentUser = auth;
-            applyUserToUI(auth);
-            document.getElementById('loginScreen').classList.add('hidden');
-            return true;
-          }
+          currentUser = auth;
+          applyUserToUI(auth);
+          document.getElementById('loginScreen').classList.add('hidden');
+          return true;
         } catch (e) {}
       }
+
+      // Default: ALWAYS prompt login screen on visit
+      currentUser = null;
       document.getElementById('loginScreen').classList.remove('hidden');
       return false;
     }
-
-    function getUserAvatar(username) {
+function getUserAvatar(username) {
       if (!username) return null;
       const u = username.toLowerCase();
       const custom = localStorage.getItem('vv_avatar_' + u);
@@ -1241,6 +1245,7 @@ function handleLoginSubmit(e) {
           expiry: Date.now() + (24 * 60 * 60 * 1000)
         };
 
+        sessionStorage.setItem('vv_session_active', 'true');
         localStorage.setItem('vv_auth', JSON.stringify(authData));
         document.cookie = `vv_auth=${encodeURIComponent(JSON.stringify(authData))}; path=/; max-age=86400; SameSite=Lax`;
 
@@ -1258,7 +1263,8 @@ function handleLoginSubmit(e) {
       if (confirm('Logout of V.V Properties Executive Suite?')) {
         const name = currentUser?.displayName || 'User';
         logActivity(`${name} logged out of session`, 'Authentication');
-        localStorage.removeItem('vv_auth');
+        sessionStorage.removeItem('vv_session_active');
+      localStorage.removeItem('vv_auth');
         document.cookie = 'vv_auth=; path=/; max-age=0';
         currentUser = null;
         document.getElementById('loginScreen').classList.remove('hidden');
@@ -1944,7 +1950,7 @@ function handleLoginSubmit(e) {
       if (dashBadge) dashBadge.textContent = newCount;
     }
 
-    // PRIORITY LEADS: SUBTLE EDITORIAL FEED WITHOUT COLOR ICON
+    // PRIORITY LEADS: EDITORIAL FEED WITH GREEN NEW ICON BADGE
     function renderPriorityLeads() {
       const list = document.getElementById('priorityLeadsList');
       if (!list) return;
@@ -1955,7 +1961,7 @@ function handleLoginSubmit(e) {
         return `
           <div class="group relative p-2.5 rounded-xl hover:bg-slate-50 border border-transparent hover:border-slate-200/80 transition-all duration-200 cursor-pointer flex items-center justify-between" onclick="openEnquiry(${originalIndex})">
             <div class="flex items-center gap-3 min-w-0">
-              <!-- Clean Monochrome Editorial Avatar (No colored icon) -->
+              <!-- Clean Monochrome Editorial Avatar -->
               <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-700 font-bold text-xs flex items-center justify-center border border-slate-200 flex-shrink-0">
                 ${initial}
               </div>
@@ -1966,9 +1972,13 @@ function handleLoginSubmit(e) {
             </div>
 
             <div class="flex items-center gap-2 flex-shrink-0">
-              <!-- Subtle Clean Badge (No colored dot) -->
-              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-600 border border-slate-200">
-                New
+              <!-- Vibrant Green New Icon Badge -->
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 border border-emerald-500/25 text-emerald-600">
+                <span class="relative flex h-1.5 w-1.5">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+                </span>
+                <span>New</span>
               </span>
 
               <!-- Subtle Action Chevron -->
@@ -2370,19 +2380,27 @@ function saveNewAccount() {
       const labels = [];
       for (let i = 0; i < 5; i++) {
         const ptDate = new Date(startMs + step * i);
-        const day = String(ptDate.getDate()).padStart(2, '0');
-        const month = String(ptDate.getMonth() + 1).padStart(2, '0');
-        if (rangeKey === '1Y' || rangeKey === 'MAX') {
+        if (rangeKey === '24h') {
+          let hrs = ptDate.getHours();
+          const ampm = hrs >= 12 ? 'PM' : 'AM';
+          hrs = hrs % 12;
+          hrs = hrs ? hrs : 12;
+          const mins = String(ptDate.getMinutes()).padStart(2, '0');
+          labels.push(`${hrs}:${mins} ${ampm}`);
+        } else if (rangeKey === '1Y' || rangeKey === 'MAX') {
+          const day = String(ptDate.getDate()).padStart(2, '0');
+          const month = String(ptDate.getMonth() + 1).padStart(2, '0');
           const year = String(ptDate.getFullYear()).slice(-2);
           labels.push(`${day}/${month}/${year}`);
         } else {
+          const day = String(ptDate.getDate()).padStart(2, '0');
+          const month = String(ptDate.getMonth() + 1).padStart(2, '0');
           labels.push(`${day}/${month}`);
         }
       }
       return labels;
     }
-
-    const denseCurvePoints = {
+const denseCurvePoints = {
       'MAX': [[0, 140], [35, 125], [70, 130], [105, 110], [140, 95], [175, 100], [210, 75], [245, 80], [280, 55], [315, 60], [350, 40], [385, 45], [420, 25], [460, 30], [500, 12]],
       '24h': [[0, 115], [35, 110], [70, 95], [105, 80], [140, 60], [175, 45], [210, 55], [245, 40], [280, 50], [315, 30], [350, 45], [385, 35], [420, 25], [460, 40], [500, 20]],
       '1W':  [[0, 110], [35, 95], [70, 75], [105, 85], [140, 70], [175, 65], [210, 50], [245, 55], [280, 35], [315, 45], [350, 50], [385, 30], [420, 35], [460, 25], [500, 18]],
