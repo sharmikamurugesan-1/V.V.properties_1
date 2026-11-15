@@ -292,7 +292,7 @@
             
             <div class="mt-4 flex items-baseline justify-between">
               <div>
-                <div class="text-3xl font-extrabold text-navy-900 tracking-tight">3</div>
+                <div class="text-3xl font-extrabold text-navy-900 tracking-tight" id="dashDraftProps">3</div>
                 <span class="text-xs text-slate-400 font-medium">Awaiting publication</span>
               </div>
               <svg class="w-16 h-8 text-royal/60" viewBox="0 0 60 25" fill="none">
@@ -1021,11 +1021,16 @@
       </div>
 
       <div>
-        <label class="block font-bold text-slate-400 uppercase tracking-wider text-[10px] mb-1">Label As</label>
-        <div class="px-3.5 py-2 rounded-xl bg-slate-100 border border-slate-200 font-bold text-slate-700 text-xs flex items-center justify-between" id="eStatusBadge">
-          <span id="eStatus">None</span>
-          <span class="text-[10px] font-semibold text-slate-400">(Reviewed)</span>
+        <label class="block font-bold text-slate-400 uppercase tracking-wider text-[10px] mb-1">Live Status Selector ("Label As")</label>
+        <div class="relative">
+          <select id="drawerStatusSelect" onchange="handleDrawerStatusChange(this.value)" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 font-bold text-navy-900 text-xs outline-none focus:ring-2 focus:ring-royal/20 cursor-pointer transition-all">
+            <option value="New">🟢 New Lead (Fresh)</option>
+            <option value="Contacted">🔵 Contacted (In Progress)</option>
+            <option value="Closed">🔴 Closed (Completed)</option>
+            <option value="None">⚪ None (Reviewed)</option>
+          </select>
         </div>
+        <p class="text-[10px] text-slate-400 mt-1 font-medium">Changing status updates metrics & localStorage instantly.</p>
       </div>
 
       <div>
@@ -1142,7 +1147,7 @@
     let properties = JSON.parse(localStorage.getItem('vv_properties_catalog')) || defaultProperties;
 
     function savePropertiesToStorage() {
-      localStorage.setItem('vv_properties_catalog', JSON.stringify(properties));
+      VVAppStore.saveProperties();
     }
 
     let currentGalleryImages = [img1, img2, img3, img4, img5];
@@ -1150,6 +1155,124 @@
     let currentAmenitiesList = [];
 
     // =========================================================
+    
+    // =========================================================
+    // 0. CENTRALIZED STATE MANAGEMENT STORE (VVAppStore)
+    // =========================================================
+    const VVAppStore = {
+      KEYS: {
+        PROPERTIES: 'vv_properties_catalog',
+        ENQUIRIES: 'vv_enquiries_list',
+        TESTIMONIALS: 'vv_testimonials_list',
+        BANNERS: 'vv_banners_slides',
+        LOGS: 'vv_activity_logs_json',
+        USERS: 'vv_accounts'
+      },
+
+      init() {
+        // Load properties
+        try {
+          const p = localStorage.getItem(this.KEYS.PROPERTIES);
+          if (p) properties = JSON.parse(p);
+          else localStorage.setItem(this.KEYS.PROPERTIES, JSON.stringify(properties));
+        } catch(e) {}
+
+        // Load enquiries
+        try {
+          const eq = localStorage.getItem(this.KEYS.ENQUIRIES);
+          if (eq) enquiries = JSON.parse(eq);
+          else localStorage.setItem(this.KEYS.ENQUIRIES, JSON.stringify(enquiries));
+        } catch(e) {}
+
+        // Load testimonials
+        try {
+          const t = localStorage.getItem(this.KEYS.TESTIMONIALS);
+          if (t) testimonials = JSON.parse(t);
+          else localStorage.setItem(this.KEYS.TESTIMONIALS, JSON.stringify(testimonials));
+        } catch(e) {}
+
+        // Load banners
+        try {
+          const b = localStorage.getItem(this.KEYS.BANNERS);
+          if (b) banners = JSON.parse(b);
+          else localStorage.setItem(this.KEYS.BANNERS, JSON.stringify(banners));
+        } catch(e) {}
+
+        // Load logs
+        try {
+          const l = localStorage.getItem(this.KEYS.LOGS);
+          if (l) activityLogs = JSON.parse(l);
+          else localStorage.setItem(this.KEYS.LOGS, JSON.stringify(activityLogs));
+        } catch(e) {}
+
+        // Load accounts
+        try {
+          const acc = localStorage.getItem(this.KEYS.USERS);
+          if (acc) accounts = JSON.parse(acc);
+          else localStorage.setItem(this.KEYS.USERS, JSON.stringify(accounts));
+        } catch(e) {}
+
+        this.updateDashboardMetrics();
+      },
+
+      saveProperties() {
+        localStorage.setItem(this.KEYS.PROPERTIES, JSON.stringify(properties));
+        this.updateDashboardMetrics();
+        renderProperties();
+        renderRecentProperties();
+      },
+
+      saveEnquiries() {
+        localStorage.setItem(this.KEYS.ENQUIRIES, JSON.stringify(enquiries));
+        this.updateDashboardMetrics();
+        renderEnquiries();
+        renderPriorityLeads();
+      },
+
+      saveTestimonials() {
+        localStorage.setItem(this.KEYS.TESTIMONIALS, JSON.stringify(testimonials));
+        renderTestimonials();
+      },
+
+      saveBanners() {
+        localStorage.setItem(this.KEYS.BANNERS, JSON.stringify(banners));
+        renderBanners();
+        updateBannersCounter();
+      },
+
+      saveLogs() {
+        localStorage.setItem(this.KEYS.LOGS, JSON.stringify(activityLogs));
+        renderActivityLogs();
+      },
+
+      saveUsers() {
+        localStorage.setItem(this.KEYS.USERS, JSON.stringify(accounts));
+        renderAccountsTable();
+      },
+
+      updateDashboardMetrics() {
+        // 1. Total Properties
+        const totalPropsEl = document.getElementById('dashTotalProps');
+        if (totalPropsEl) totalPropsEl.textContent = properties.length;
+
+        // 2. Draft Properties
+        const draftCount = properties.filter(p => !p[3] || p[3] === 'None' || (p[3] && p[3].toLowerCase() === 'draft')).length;
+        const draftPropsEl = document.getElementById('dashDraftProps');
+        if (draftPropsEl) draftPropsEl.textContent = draftCount;
+
+        // 3. Total Enquiries
+        const totalEnqEl = document.getElementById('dashTotalEnquiries');
+        if (totalEnqEl) totalEnqEl.textContent = enquiries.length;
+
+        // 4. New Leads
+        const newLeadsCount = enquiries.filter(e => e.status === 'New').length;
+        const newLeadsEl = document.getElementById('dashNewLeads');
+        const badge = document.getElementById('unreadEnquiriesBadge');
+        if (newLeadsEl) newLeadsEl.textContent = newLeadsCount;
+        if (badge) badge.textContent = newLeadsCount;
+      }
+    };
+
     // 1. AUTHENTICATION (STRICT 24-HR EXPIRY FOR NON-ADMIN)
     // =========================================================
     const defaultAccounts = [
@@ -1157,7 +1280,7 @@
       { name: 'Saran', username: 'saran', role: 'Property Manager', status: 'Active', created: '15 Nov 2026', photo: null },
       { name: 'Vibhkar', username: 'vibhkar', role: 'Sales Executive', status: 'Active', created: '15 Nov 2026', photo: null },
       { name: 'Umeshwar', username: 'umeshwar', role: 'Marketing Lead', status: 'Active', created: '15 Nov 2026', photo: null },
-      { name: 'Sharmika', username: 'sharmika', role: 'Portfolio Director', status: 'Active', created: '15 Nov 2026', photo: null }
+      { name: 'Sharmika Murugesan', username: 'sharmika', role: 'Portfolio Director', status: 'Active', created: '15 Nov 2026', photo: null }
     ];
 
     let accounts = JSON.parse(localStorage.getItem('vv_accounts')) || defaultAccounts;
@@ -1991,15 +2114,32 @@ function handleLoginSubmit(e) {
       }).join('');
       if (window.lucide) lucide.createIcons();
     }
-function openEnquiry(i) {
+
+    let currentOpenEnquiryIndex = -1;
+
+    function handleDrawerStatusChange(newStatus) {
+      if (currentOpenEnquiryIndex < 0 || !enquiries[currentOpenEnquiryIndex]) return;
+      const enq = enquiries[currentOpenEnquiryIndex];
+      const oldStatus = enq.status;
+      enq.status = newStatus;
+      VVAppStore.saveEnquiries();
+      logActivity(`Updated lead status for "${enq.name}" from "${oldStatus}" to "${newStatus}"`, 'Enquiries');
+      showToast(`Status updated to "${newStatus}"`);
+    }
+
+    function openEnquiry(i) {
+      currentOpenEnquiryIndex = i;
       const enq = enquiries[i];
       if (!enq) return;
 
       if (enq.status === 'New') {
         enq.status = 'None';
+        VVAppStore.saveEnquiries();
         logActivity(`Opened lead dossier for ${enq.name} - Labeled as None`, 'Enquiries');
-        renderEnquiries();
       }
+
+      const statusSelect = document.getElementById('drawerStatusSelect');
+      if (statusSelect) statusSelect.value = enq.status;
 
       document.getElementById('eName').textContent = enq.name;
       document.getElementById('ePhone').textContent = enq.phone;
@@ -2151,8 +2291,8 @@ function openEnquiry(i) {
         logActivity(`Added customer testimonial from "${name}" (${stars} stars)`, 'Testimonials');
         showToast('Testimonial added');
       }
+      VVAppStore.saveTestimonials();
       closeModal('testimonialModal');
-      renderTestimonials();
     }
 
     function deleteTestimonial(i) {
@@ -2160,7 +2300,7 @@ function openEnquiry(i) {
         const name = testimonials[i].name;
         testimonials.splice(i, 1);
         logActivity(`Deleted testimonial from "${name}"`, 'Testimonials');
-        renderTestimonials();
+        VVAppStore.saveTestimonials();
         showToast('Testimonial removed');
       }
     }
