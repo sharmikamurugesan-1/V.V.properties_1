@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { store } from "@/lib/store";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { createAdminClient } from "@/lib/supabase/server";
 
 const leadSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters").max(80),
@@ -47,7 +48,27 @@ export async function POST(req: NextRequest) {
 
     const data = result.data;
 
-    // 1. Durably persist lead before reporting success (Task 3 requirement)
+    // 1. Durably persist lead to Supabase inquiries table if configured
+    if (process.env.NEXT_PUBLIC_SUPABASE_URL) {
+      try {
+        const supabase = createAdminClient();
+        await (supabase.from("inquiries") as any).insert({
+          client_name: data.name.trim(),
+          phone: data.phone.trim(),
+          email: data.email?.trim() || null,
+          inquiry_type: data.visitDate ? "site-visit" : "general",
+          budget_range: data.budget || null,
+          preferred_date: data.visitDate || null,
+          message: data.notes || null,
+          source: `Website Form - Project: ${data.project}`,
+          status: "New",
+        });
+      } catch (sbErr) {
+        console.warn("[Supabase Inquiries Sync Warning]", sbErr);
+      }
+    }
+
+    // 2. Local store persistence
     let savedLead;
     try {
       savedLead = await store.addLead({
@@ -69,10 +90,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 2. Safe, non-PII operational logging
-    console.log(`[LEAD RECEIVED] ID: ${savedLead.id} | Project: ${savedLead.project}`);
-
-    // 3. Optional webhook dispatch
+    // Optional webhook dispatch
     const webhookUrl = process.env.LEAD_WEBHOOK_URL;
     if (webhookUrl) {
       try {
@@ -92,7 +110,6 @@ export async function POST(req: NextRequest) {
           }),
         });
       } catch (webhookErr) {
-        // Log webhook failure without failing the lead since it is safely stored in store
         console.error("[LEAD WEBHOOK ERROR]", webhookErr);
       }
     }
@@ -110,8 +127,23 @@ export async function POST(req: NextRequest) {
   }
 }
 
-
 export async function GET() {
+  if (process.env.NEXT_PUBLIC_SUPABASE_URL) {
+    try {
+      const supabase = createAdminClient();
+      const { data, error } = await supabase
+        .from("inquiries")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (!error && data && data.length > 0) {
+        return NextResponse.json({ success: true, leads: data, source: "supabase" });
+      }
+    } catch (sbErr) {
+      console.warn("[Supabase Leads Fetch Warning]", sbErr);
+    }
+  }
+
   const fs = await import('fs');
   const path = await import('path');
   const leadsFile = path.join(process.cwd(), 'data', 'leads.json');
