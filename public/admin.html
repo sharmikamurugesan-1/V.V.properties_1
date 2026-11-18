@@ -225,6 +225,15 @@
             </button>
           </li>
           <li>
+            <button onclick="go('site-visits')" id="nav-site-visits" class="nav-item w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/5 font-semibold transition-all text-left">
+              <div class="flex items-center gap-3">
+                <i data-lucide="calendar" class="w-4 h-4"></i>
+                <span>Site Visits</span>
+              </div>
+              <span id="pendingVisitsBadge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-400">2</span>
+            </button>
+          </li>
+          <li>
             <button onclick="go('testimonials')" id="nav-testimonials" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/5 font-semibold transition-all text-left">
               <i data-lucide="star" class="w-4 h-4"></i>
               <span>Testimonials</span>
@@ -272,6 +281,10 @@
       <div class="flex items-center gap-2.5 text-slate-500 font-semibold text-xs">
         <i data-lucide="calendar" class="w-4 h-4 text-royal"></i>
         <span id="headerLiveDate">Saturday, 14 November 2026</span>
+      </div>
+      <div id="supabaseSyncBadge" class="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 shadow-sm">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span class="font-sans">Supabase Cloud Active</span>
       </div>
 
       <!-- Top Right User Profile (Bold Victor Paul, Super Administrator below) -->
