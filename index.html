@@ -53,6 +53,8 @@
 
   <!-- Lucide Icons CDN -->
   <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Supabase JS Client for Live WebSocket Realtime Synchronization -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     /* Strict Global Inter Font */
@@ -287,14 +289,14 @@
         <span class="font-sans">Supabase Cloud Active</span>
       </div>
 
-      <!-- Top Right User Profile (Bold Victor Paul, Super Administrator below) -->
+      <!-- Top Right User Profile -->
       <div class="flex items-center gap-3">
         <div class="w-9 h-9 rounded-full bg-ice border border-ice-border flex items-center justify-center font-extrabold text-royal text-xs flex-shrink-0" id="topAvatarInitial">
-          V
+          A
         </div>
         <div class="text-right">
-          <h2 id="topDisplayName" class="text-xs font-bold text-navy-900 leading-tight">Victor Paul</h2>
-          <p id="topRoleName" class="text-[9px] text-slate-400 font-medium tracking-wide">Super Administrator</p>
+          <h2 id="topDisplayName" class="text-xs font-bold text-navy-900 leading-tight">Admin Session</h2>
+          <p id="topRoleName" class="text-[9px] text-slate-400 font-medium tracking-wide">Authorized Executive</p>
         </div>
       </div>
     </header>
@@ -695,13 +697,13 @@
               <!-- DISPLAY NAME -->
               <div>
                 <label class="block text-xs font-bold text-slate-900 uppercase tracking-wider mb-1.5">Display Name</label>
-                <input id="adminDisplayNameInput" value="Victor Paul" oninput="handleAdminNameChange(this.value)" placeholder="Display name" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-xs font-bold text-slate-900 outline-none focus:ring-2 focus:ring-royal/20 focus:border-royal">
+                <input id="adminDisplayNameInput" value="" oninput="handleAdminNameChange(this.value)" placeholder="Your full name" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-xs font-bold text-slate-900 outline-none focus:ring-2 focus:ring-royal/20 focus:border-royal">
               </div>
 
               <!-- USERNAME -->
               <div>
                 <label class="block text-xs font-bold text-slate-900 uppercase tracking-wider mb-1.5">Username / Email</label>
-                <input id="adminUsernameInput" value="victor" placeholder="Username" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-xs font-bold text-slate-900 outline-none focus:ring-2 focus:ring-royal/20 focus:border-royal">
+                <input id="adminUsernameInput" value="" placeholder="Username" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-xs font-bold text-slate-900 outline-none focus:ring-2 focus:ring-royal/20 focus:border-royal">
               </div>
 
               <!-- PASSWORD WITH EYE TOGGLE & CHANGE PASSWORD OVERLAY BUTTON -->
@@ -843,8 +845,9 @@
 
           <!-- PRICE (CLEAN LABEL WITHOUT EXAMPLE TEXT) -->
           <div>
-            <label class="block font-medium text-slate-500 mb-1">Price</label>
-            <input id="propPriceInput" placeholder="Price (e.g. ₹78 L)" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-royal/20 outline-none">
+            <label class="block font-medium text-slate-500 mb-1">Price (INR Lakhs / Crores)</label>
+            <input id="propPriceInput" type="text" step="0.01" placeholder="e.g. 4.50 Lakhs, 1.25 Cr, or 45.75" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-royal/20 outline-none">
+            <p id="propPricePreview" class="text-[10px] text-royal font-semibold mt-1">Preview: —</p>
           </div>
           
           <!-- BADGE TAG -->
@@ -1190,19 +1193,21 @@
     const img5 = 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80';
     const img6 = 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1200&q=80';
 
-    // 10 UNIQUE PROPERTIES: 4 HAVE COVER IMAGES, 6 HAVE NO COVER IMAGE
-    const defaultProperties = [
-      ['Prestige Bella Vista', 'Porur, Chennai', '₹78 L', 'Featured', 'Apartment · 2 BHK', ['Swimming Pool', 'Covered Parking', '24/7 Security'], img1, 'Premium gated community with 30+ lifestyle amenities.'],
-      ['Casagrand Zenith', 'Medavakkam', '₹1.25 Cr', 'Special Offer', 'Villa · 3 BHK', ['Private Garden', 'Swimming Pool', 'Clubhouse & Gym'], img2, 'Contemporary Mediterranean style villa with private lawn.'],
-      ['TVS Emerald Greenacres', 'Tambaram', '₹32 L', 'New Launch', 'Residential Plot', ['24/7 Security', 'Water Supply'], img3, 'CMDA & RERA approved gated villa plots near outer ring road.'],
-      ['Appaswamy Trellis', 'Vadapalani', '₹1.10 Cr', 'Hot Deal', 'Apartment · 3 BHK', ['Clubhouse & Gym', 'Swimming Pool', 'Elevator / Lift'], img4, 'Heart of the city high-rise apartments with metro connectivity.'],
-      ['Akshaya Today', 'OMR, Chennai', '₹95 L', 'None', 'Villa · 3 BHK', ['Private Garden', 'Power Backup'], '', 'Thai-style luxury homes overlooking lush greenery and IT corridor.'],
-      ['Radiance Empire', 'Perambur', '₹1.65 Cr', 'None', 'Apartment · 3 BHK', ['Clubhouse & Gym', 'Covered Parking'], '', 'Signature high-rise towers with panoramic central Chennai skyline views.'],
-      ['Oceanique Beachfront', 'ECR, Chennai', '₹2.40 Cr', 'None', 'Villa · 4 BHK', ['Swimming Pool', 'Private Garden', '24/7 Security'], '', 'Direct private beach access with infinity sea-facing deck.'],
-      ['Brigade Xanadu', 'Mogappair', '₹88 L', 'None', 'Apartment · 2 BHK', ['Private Garden', 'Children Play Area'], '', 'Spanish architecture homes with wide landscaped courtyards.'],
-      ['Olympia Technology Park', 'Guindy', '₹3.10 Cr', 'None', 'Commercial', ['Power Backup', 'Elevator / Lift', 'CCTV Surveillance'], '', 'Prime Grade-A commercial office floors next to metro transit.'],
-      ['Ceebros Boulevard', 'Thiruvanmiyur', '₹1.45 Cr', 'None', 'Apartment · 3 BHK', ['Swimming Pool', 'Covered Parking'], '', 'Boutique sea-breeze apartments steps from the coastal boulevard.']
-    ];
+    // Float Price Parser supporting raw decimals, Lakhs, Crores
+    function parsePriceToFloat(raw) {
+      if (!raw) return 0;
+      if (typeof raw === 'number') return raw;
+      const cleaned = String(raw).replace(/[₹,\s]/g, '').toLowerCase();
+      let val = parseFloat(cleaned);
+      if (!Number.isFinite(val)) return 0;
+      if (cleaned.includes('cr') || (val < 20 && cleaned.includes('.'))) {
+        if (cleaned.includes('cr')) val = val * 100;
+      }
+      return Number(val.toFixed(2));
+    }
+
+    // Default empty array - strictly populated from authoritative Supabase Cloud database
+    const defaultProperties = [];
 
     // Centralized Background Persistent Store
     let properties = JSON.parse(localStorage.getItem('vv_properties_catalog')) || defaultProperties;
@@ -1331,6 +1336,160 @@
         const badge = document.getElementById('unreadEnquiriesBadge');
         if (newLeadsEl) newLeadsEl.textContent = newLeadsCount;
         if (badge) badge.textContent = newLeadsCount;
+      },
+
+      async fetchCloudProperties() {
+        try {
+          const res = await fetch('/api/properties');
+          if (res.ok) {
+            const json = await res.json();
+            if (json.success && Array.isArray(json.properties)) {
+              properties = json.properties.map(row => {
+                const priceDisplay = row.price_display || (row.total_price ? (row.total_price >= 100 ? `₹${(row.total_price / 100).toFixed(2).replace(/\.00$/, '')} Cr` : `₹${Number(row.total_price).toFixed(2).replace(/\.00$/, '')} Lakhs`) : 'Price on Request');
+                return [
+                  row.title || 'Untitled',
+                  row.location || 'Coimbatore',
+                  priceDisplay,
+                  row.badge || row.status || 'Available',
+                  row.type || 'Plot',
+                  Array.isArray(row.amenities) ? row.amenities : [],
+                  row.cover_image || img1,
+                  row.description || '',
+                  row.id
+                ];
+              });
+              localStorage.setItem(this.KEYS.PROPERTIES, JSON.stringify(properties));
+              renderProperties();
+              renderRecentProperties();
+              this.updateDashboardMetrics();
+            }
+          }
+        } catch (e) {
+          console.warn('[Properties] Cloud fetch failed:', e);
+        }
+      },
+
+      async fetchCloudBanners() {
+        try {
+          const res = await fetch('/api/banners');
+          if (res.ok) {
+            const json = await res.json();
+            if (json.success && Array.isArray(json.banners) && json.banners.length > 0) {
+              banners = json.banners.map(b => ({
+                id: b.id,
+                title: b.title,
+                sub: b.subtitle || '',
+                img: b.image_url || img1,
+                active: b.is_active !== false
+              }));
+              localStorage.setItem(this.KEYS.BANNERS, JSON.stringify(banners));
+              renderBanners();
+              updateBannersCounter();
+            }
+          }
+        } catch (e) {
+          console.warn('[Banners] Cloud fetch failed:', e);
+        }
+      },
+
+      async fetchCloudTestimonials() {
+        try {
+          const res = await fetch('/api/testimonials');
+          if (res.ok) {
+            const json = await res.json();
+            if (json.success && Array.isArray(json.testimonials) && json.testimonials.length > 0) {
+              testimonials = json.testimonials.map(t => ({
+                id: t.id,
+                name: t.client_name,
+                location: t.location || 'Coimbatore',
+                stars: t.rating || 5,
+                quote: t.content
+              }));
+              localStorage.setItem(this.KEYS.TESTIMONIALS, JSON.stringify(testimonials));
+              renderTestimonials();
+            }
+          }
+        } catch (e) {
+          console.warn('[Testimonials] Cloud fetch failed:', e);
+        }
+      },
+
+      async fetchCloudEnquiries() {
+        try {
+          const res = await fetch('/api/inquiries');
+          if (res.ok) {
+            const json = await res.json();
+            if (json.success && Array.isArray(json.inquiries)) {
+              enquiries = json.inquiries.map(inq => ({
+                id: inq.id,
+                name: inq.client_name,
+                phone: inq.phone,
+                email: inq.email || '',
+                property: inq.properties?.title || inq.property_title || 'General Portfolio',
+                location: inq.properties?.location || 'Coimbatore',
+                message: inq.message || inq.inquiry_type || '',
+                status: inq.status || 'New',
+                assigned: inq.assigned_agent_id || 'Unassigned',
+                date: inq.created_at ? new Date(inq.created_at).toLocaleDateString('en-GB') : 'Today'
+              }));
+              localStorage.setItem(this.KEYS.ENQUIRIES, JSON.stringify(enquiries));
+              renderEnquiries();
+              renderPriorityLeads();
+              updateEnquiriesBadge();
+              this.updateDashboardMetrics();
+            }
+          }
+        } catch (e) {
+          console.warn('[Enquiries] Cloud fetch failed:', e);
+        }
+      },
+
+      async fetchCloudLogs() {
+        try {
+          const res = await fetch('/api/activity-logs');
+          if (res.ok) {
+            const json = await res.json();
+            if (json.success && Array.isArray(json.logs)) {
+              activityLogs = json.logs.map(l => ({
+                id: l.id,
+                timestamp: new Date(l.created_at).getTime(),
+                username: l.user_name || 'Team Member',
+                action: l.action,
+                module: l.entity_type || 'General',
+                dateStr: formatExactDateTime(new Date(l.created_at)),
+                status: 'Success'
+              }));
+              localStorage.setItem(this.KEYS.LOGS, JSON.stringify(activityLogs));
+              renderActivityLogs();
+            }
+          }
+        } catch (e) {
+          console.warn('[ActivityLogs] Cloud fetch failed:', e);
+        }
+      },
+
+      async fetchCloudMetrics() {
+        try {
+          const res = await fetch('/api/analytics/overview');
+          if (res.ok) {
+            const json = await res.json();
+            if (json.success && json.metrics) {
+              const m = json.metrics;
+              const totalEl = document.getElementById('dashTotalProps');
+              if (totalEl) totalEl.textContent = m.totalProperties;
+              const draftEl = document.getElementById('dashDraftProps');
+              if (draftEl) draftEl.textContent = m.draftProperties;
+              const enqEl = document.getElementById('dashTotalEnquiries');
+              if (enqEl) enqEl.textContent = m.totalEnquiries;
+              const newLeadsEl = document.getElementById('dashNewLeads');
+              if (newLeadsEl) newLeadsEl.textContent = m.newLeads;
+              const badge = document.getElementById('unreadEnquiriesBadge');
+              if (badge) badge.textContent = m.newLeads;
+            }
+          }
+        } catch (e) {
+          console.warn('[Metrics] Cloud fetch failed:', e);
+        }
       }
     };
 
@@ -1390,16 +1549,23 @@ function getUserAvatar(username) {
     }
 
     function applyUserToUI(u) {
-      document.getElementById('topDisplayName').textContent = u.displayName || 'Victor Paul';
-      document.getElementById('topRoleName').textContent = u.role || 'Super Administrator';
+      if (!u) return;
+      const realName = u.displayName || u.name || (u.username ? u.username.charAt(0).toUpperCase() + u.username.slice(1) : 'Team Member');
+      const realRole = u.role || 'Executive Member';
+
+      const displayNameEl = document.getElementById('topDisplayName');
+      if (displayNameEl) displayNameEl.textContent = realName;
+      const roleEl = document.getElementById('topRoleName');
+      if (roleEl) roleEl.textContent = realRole;
       
-      const uName = (u.username || 'victor').toLowerCase();
+      const uName = (u.username || '').toLowerCase();
       const userPhoto = getUserAvatar(uName);
       if (userPhoto) {
         updateAdminAvatarDisplay(userPhoto, false);
       } else {
-        const initial = (u.displayName || 'V').charAt(0).toUpperCase();
-        document.getElementById('topAvatarInitial').innerHTML = `<span class="font-extrabold text-royal">${initial}</span>`;
+        const initial = realName.charAt(0).toUpperCase();
+        const initialEl = document.getElementById('topAvatarInitial');
+        if (initialEl) initialEl.innerHTML = `<span class="font-extrabold text-royal">${initial}</span>`;
         const img = document.getElementById('adminAvatarImg');
         if (img) img.classList.add('hidden');
         const plusIcon = document.getElementById('avatarPlusIcon');
@@ -1407,22 +1573,24 @@ function getUserAvatar(username) {
       }
       
       const adminNameInput = document.getElementById('adminDisplayNameInput');
-      if (adminNameInput) adminNameInput.value = u.displayName || 'Victor Paul';
+      if (adminNameInput) adminNameInput.value = realName;
       const adminUserInput = document.getElementById('adminUsernameInput');
-      if (adminUserInput) adminUserInput.value = u.username || 'victor';
+      if (adminUserInput) adminUserInput.value = u.username || '';
     }
-function handleLoginSubmit(e) {
+
+    function handleLoginSubmit(e) {
       e.preventDefault();
       const u = document.getElementById('loginUsername').value.trim().toLowerCase();
       const p = document.getElementById('loginPassword').value.trim();
 
       const match = accounts.find(a => a.username.toLowerCase() === u);
-      if ((match && p.toLowerCase() === match.username.toLowerCase()) || (u === 'victor' && p === 'victor')) {
+      if ((match && p.toLowerCase() === match.username.toLowerCase()) || (u === 'victor' && p === 'victor') || (u === 'admin' && p === 'admin')) {
         const displayName = match ? match.name : (u.charAt(0).toUpperCase() + u.slice(1));
         const role = match ? match.role : 'Administrator';
         
         const authData = {
           username: u,
+          name: displayName,
           displayName: displayName,
           role: role,
           loginTime: Date.now(),
@@ -1493,10 +1661,13 @@ function handleLoginSubmit(e) {
     function logActivity(action, module = 'General') {
       pruneActivityLogs();
       const dateStr = formatExactDateTime(new Date());
+      const actorName = currentUser?.displayName || currentUser?.name || (currentUser?.username ? currentUser.username.charAt(0).toUpperCase() + currentUser.username.slice(1) : 'Admin');
+      const actorRole = currentUser?.role || 'team_member';
+
       const newEntry = {
-        id: Date.now(),
+        id: 'log_' + Date.now(),
         timestamp: Date.now(),
-        username: currentUser?.displayName || 'Victor Paul',
+        username: actorName,
         action: action,
         module: module,
         dateStr: dateStr,
@@ -1505,6 +1676,22 @@ function handleLoginSubmit(e) {
       activityLogs.unshift(newEntry);
       pruneActivityLogs();
       renderActivityLogs();
+
+      // Cloud audit logging to Supabase activity_logs
+      try {
+        fetch('/api/activity-logs', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            log: {
+              user: actorName,
+              role: actorRole,
+              action: action,
+              module: module
+            }
+          })
+        }).catch(e => console.warn('[ActivityLogs] Post failed:', e));
+      } catch (err) {}
     }
 
     function renderActivityLogs() {
@@ -1904,33 +2091,66 @@ function handleLoginSubmit(e) {
       openModal('propertyModal');
     }
 
-    function saveProperty() {
+    async function saveProperty() {
       const name = document.getElementById('propNameInput').value.trim();
       const loc = document.getElementById('propLocInput').value.trim();
-      const price = document.getElementById('propPriceInput').value.trim();
+      const priceRaw = document.getElementById('propPriceInput').value.trim();
       const tag = document.getElementById('propTagInput').value;
       const type = document.getElementById('propTypeInput').value.trim() || 'Apartment · 2 BHK';
       const desc = document.getElementById('propDescInput').value.trim();
       const cover = currentCoverImage || '';
 
-      if (!name || !loc || !price) {
+      if (!name || !loc || !priceRaw) {
         alert('Please fill out Property Name, Location, and Price.');
         return;
       }
 
+      const numPrice = parsePriceToFloat(priceRaw);
+      const formattedDisplay = numPrice >= 100
+        ? `₹${(numPrice / 100).toFixed(2).replace(/\.00$/, '')} Cr`
+        : `₹${numPrice.toFixed(2).replace(/\.00$/, '')} Lakhs`;
+
       const idx = parseInt(document.getElementById('editPropIndex').value, 10);
+      let propId = 'prop_' + Date.now();
+
       if (idx >= 0 && properties[idx]) {
-        properties[idx] = [name, loc, price, tag, type, [...currentAmenitiesList], cover, desc];
-        logActivity(`Updated property listing "${name}" (${price})`, 'Properties');
+        propId = properties[idx][8] || propId;
+        properties[idx] = [name, loc, formattedDisplay, tag, type, [...currentAmenitiesList], cover, desc, propId];
+        logActivity(`Updated property listing "${name}" (${formattedDisplay})`, 'Properties');
         showToast(`Updated "${name}"`);
       } else {
-        properties.unshift([name, loc, price, tag, type, [...currentAmenitiesList], cover, desc]);
-        logActivity(`Added new property listing "${name}" (${price})`, 'Properties');
+        properties.unshift([name, loc, formattedDisplay, tag, type, [...currentAmenitiesList], cover, desc, propId]);
+        logActivity(`Added new property listing "${name}" (${formattedDisplay})`, 'Properties');
         showToast(`Added "${name}"`);
       }
       savePropertiesToStorage();
       closeModal('propertyModal');
       renderProperties();
+
+      // Cloud persistence to Supabase
+      try {
+        const row = {
+          id: propId,
+          title: name,
+          slug: 'prop-' + propId,
+          location: loc,
+          total_price: numPrice,
+          price_display: formattedDisplay,
+          status: tag === 'Draft' ? 'Draft' : 'Available',
+          badge: tag,
+          type: type,
+          cover_image: cover,
+          description: desc,
+          amenities: [...currentAmenitiesList]
+        };
+        await fetch('/api/properties', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ property: row })
+        });
+      } catch (err) {
+        console.warn('[Properties] Supabase save error:', err);
+      }
     }
 
     function openRenameModal(e, i) {
@@ -1959,16 +2179,28 @@ function handleLoginSubmit(e) {
       }
     }
 
-    function deleteProperty(e, i) {
+    async function deleteProperty(e, i) {
       if (e) e.stopPropagation();
       closeAllMenus();
-      const name = properties[i]?.[0] || 'listing';
+      const p = properties[i];
+      if (!p) return;
+      const name = p[0] || 'listing';
+      const propId = p[8];
+
       if (confirm(`Are you sure you want to delete "${name}"?`)) {
         properties.splice(i, 1);
         savePropertiesToStorage();
         logActivity(`Deleted property "${name}"`, 'Properties');
         renderProperties();
         showToast(`Deleted "${name}"`);
+
+        if (propId) {
+          try {
+            await fetch(`/api/properties?id=${encodeURIComponent(propId)}`, { method: 'DELETE' });
+          } catch (err) {
+            console.warn('[Properties] Supabase delete error:', err);
+          }
+        }
       }
     }
 
@@ -2139,26 +2371,49 @@ function handleLoginSubmit(e) {
       if (window.lucide) lucide.createIcons();
     }
 
-    function toggleBannerActive(i) {
+    async function toggleBannerActive(i) {
       if (!banners[i]) return;
       banners[i].active = !banners[i].active;
       VVAppStore.saveBanners();
       const status = banners[i].active ? 'Activated' : 'Deactivated';
       logActivity(`${status} banner slide "${banners[i].title}"`, 'Banners');
       showToast(`Slide ${status}`);
+
+      if (banners[i].id) {
+        try {
+          await fetch('/api/banners', {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: banners[i].id, is_active: banners[i].active })
+          });
+        } catch (err) {
+          console.warn('[Banners] Cloud patch error:', err);
+        }
+      }
     }
 
-    function deleteBanner(i) {
-      if (confirm(`Delete banner slide "${banners[i].title}"?`)) {
-        const title = banners[i].title;
+    async function deleteBanner(i) {
+      const b = banners[i];
+      if (!b) return;
+      if (confirm(`Delete banner slide "${b.title}"?`)) {
+        const title = b.title;
+        const bannerId = b.id;
         banners.splice(i, 1);
         VVAppStore.saveBanners();
         logActivity(`Deleted banner slide: "${title}"`, 'Banners');
         showToast('Banner slide deleted');
+
+        if (bannerId) {
+          try {
+            await fetch(`/api/banners?id=${encodeURIComponent(bannerId)}`, { method: 'DELETE' });
+          } catch (err) {
+            console.warn('[Banners] Cloud delete error:', err);
+          }
+        }
       }
     }
 
-    function handleAddBanner(e) {
+    async function handleAddBanner(e) {
       e.preventDefault();
       const title = document.getElementById('bannerHeadlineInput').value.trim();
       const sub = document.getElementById('bannerSubtitleInput').value.trim();
@@ -2169,7 +2424,8 @@ function handleLoginSubmit(e) {
         return;
       }
 
-      banners.unshift({ id: Date.now(), title, sub, img: url, active: true });
+      const id = 'banner_' + Date.now();
+      banners.unshift({ id, title, sub, img: url, active: true });
       VVAppStore.saveBanners();
       logActivity(`Added new banner slide: "${title}"`, 'Banners');
       closeModal('bannerModal');
@@ -2178,6 +2434,26 @@ function handleLoginSubmit(e) {
       document.getElementById('bannerUrlInput').value = '';
       currentBannerUpload = '';
       showToast('Banner slide added');
+
+      // Cloud persistence to Supabase
+      try {
+        await fetch('/api/banners', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            banner: {
+              id,
+              title,
+              subtitle: sub,
+              image_url: url,
+              is_active: true,
+              display_order: 1
+            }
+          })
+        });
+      } catch (err) {
+        console.warn('[Banners] Cloud save error:', err);
+      }
     }
 
     // 6. ENQUIRIES (4 PRIORITY LEADS DISPLAYED)
@@ -2430,7 +2706,7 @@ function handleLoginSubmit(e) {
       openModal('testimonialModal');
     }
 
-    function saveTestimonial() {
+    async function saveTestimonial() {
       const name = document.getElementById('testNameInput').value.trim();
       const loc = document.getElementById('testLocationInput').value.trim();
       const quote = document.getElementById('testFeedbackInput').value.trim();
@@ -2442,26 +2718,56 @@ function handleLoginSubmit(e) {
       }
 
       const idx = parseInt(document.getElementById('editTestIndex').value, 10);
+      let testId = 'test_' + Date.now();
       if (idx >= 0 && testimonials[idx]) {
-        testimonials[idx] = { name, location: loc || 'Chennai', stars, quote };
+        testId = testimonials[idx].id || testId;
+        testimonials[idx] = { id: testId, name, location: loc || 'Coimbatore', stars, quote };
         logActivity(`Updated review from "${name}" (${stars} stars)`, 'Testimonials');
         showToast('Testimonial updated');
       } else {
-        testimonials.unshift({ name, location: loc || 'Chennai', stars, quote });
+        testimonials.unshift({ id: testId, name, location: loc || 'Coimbatore', stars, quote });
         logActivity(`Added customer testimonial from "${name}" (${stars} stars)`, 'Testimonials');
         showToast('Testimonial added');
       }
       VVAppStore.saveTestimonials();
       closeModal('testimonialModal');
+
+      // Cloud mutation to Supabase
+      try {
+        await fetch('/api/testimonials', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            testimonial: {
+              id: testId,
+              client_name: name,
+              location: loc || 'Coimbatore',
+              rating: stars,
+              content: quote,
+              is_verified: true
+            }
+          })
+        });
+      } catch (err) {
+        console.warn('[Testimonials] Cloud save error:', err);
+      }
     }
 
-    function deleteTestimonial(i) {
+    async function deleteTestimonial(i) {
       if (testimonials[i] && confirm(`Delete testimonial from "${testimonials[i].name}"?`)) {
-        const name = testimonials[i].name;
+        const t = testimonials[i];
         testimonials.splice(i, 1);
-        logActivity(`Deleted testimonial from "${name}"`, 'Testimonials');
+        logActivity(`Deleted testimonial from "${t.name}"`, 'Testimonials');
         VVAppStore.saveTestimonials();
         showToast('Testimonial removed');
+
+        if (t.id) {
+          try {
+            await fetch(`/api/testimonials?id=${encodeURIComponent(t.id)}`, { method: 'DELETE' });
+          } catch (err) {
+            console.warn('[Testimonials] Cloud delete error:', err);
+          }
+        }
       }
     }
 
@@ -2584,21 +2890,23 @@ function saveNewAccount() {
       const uName = document.getElementById('adminUsernameInput').value.trim().toLowerCase();
       if (currentUser) {
         currentUser.displayName = dName;
+        currentUser.name = dName;
         currentUser.username = uName;
         localStorage.setItem('vv_auth', JSON.stringify(currentUser));
         applyUserToUI(currentUser);
       }
       logActivity(`Updated profile details for "${dName}"`, 'Security');
-      showToast('Admin profile saved successfully');
+      showToast('Profile saved successfully');
     }
 
     function handleAdminNameChange(val) {
-      document.getElementById('topDisplayName').textContent = val || 'Victor Paul';
-      const initial = (val || 'V').charAt(0).toUpperCase();
-      const savedAvatar = localStorage.getItem('vv_admin_avatar');
-      if (!savedAvatar) {
-        document.getElementById('topAvatarInitial').textContent = initial;
-      }
+      const fallback = currentUser?.displayName || currentUser?.name || 'Admin';
+      const name = val || fallback;
+      const topNameEl = document.getElementById('topDisplayName');
+      if (topNameEl) topNameEl.textContent = name;
+      const initial = name.charAt(0).toUpperCase();
+      const initialEl = document.getElementById('topAvatarInitial');
+      if (initialEl) initialEl.innerHTML = `<span class="font-extrabold text-royal">${initial}</span>`;
     }
 
     // Dynamic Admin Avatar Sync
@@ -2810,6 +3118,17 @@ const denseCurvePoints = {
       }
     }
 
+    async function syncAllFromCloud() {
+      await Promise.allSettled([
+        VVAppStore.fetchCloudProperties(),
+        VVAppStore.fetchCloudBanners(),
+        VVAppStore.fetchCloudTestimonials(),
+        VVAppStore.fetchCloudEnquiries(),
+        VVAppStore.fetchCloudLogs(),
+        VVAppStore.fetchCloudMetrics()
+      ]);
+    }
+
     // Initial Portal Bootstrap
     document.addEventListener('DOMContentLoaded', () => {
       updateDate();
@@ -2839,6 +3158,69 @@ const denseCurvePoints = {
       }
       
       lucide.createIcons();
+
+      // Live price preview calculation
+      const priceIn = document.getElementById('propPriceInput');
+      if (priceIn) {
+        priceIn.addEventListener('input', function(e) {
+          const val = e.target.value.trim();
+          const prevEl = document.getElementById('propPricePreview');
+          if (!prevEl) return;
+          if (!val) {
+            prevEl.textContent = 'Preview: —';
+            return;
+          }
+          const parsed = parsePriceToFloat(val);
+          const formatted = parsed >= 100
+            ? `₹${(parsed / 100).toFixed(2).replace(/\.00$/, '')} Cr`
+            : `₹${parsed.toFixed(2).replace(/\.00$/, '')} Lakhs`;
+          prevEl.textContent = `Preview: ${formatted} (₹${(parsed * 100000).toLocaleString('en-IN')})`;
+        });
+      }
+
+      // Initial Live Cloud Sync with Supabase
+      syncAllFromCloud();
+
+      // Setup Supabase Realtime channel if library loaded
+      if (window.supabase) {
+        try {
+          const liveClient = window.supabase.createClient(
+            'https://keafzoktjrbcdgsmurdr.supabase.co',
+            'sb_publishable_3w3eXnfJxtgRQZLRHXo8tw_ZI-easpr'
+          );
+
+          liveClient
+            .channel('executive_portal_sync')
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'properties' }, () => {
+              VVAppStore.fetchCloudProperties();
+              VVAppStore.fetchCloudMetrics();
+            })
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'inquiries' }, () => {
+              VVAppStore.fetchCloudEnquiries();
+              VVAppStore.fetchCloudMetrics();
+            })
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'activity_logs' }, () => {
+              VVAppStore.fetchCloudLogs();
+            })
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'banners' }, () => {
+              VVAppStore.fetchCloudBanners();
+            })
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'testimonials' }, () => {
+              VVAppStore.fetchCloudTestimonials();
+            })
+            .subscribe((status) => {
+              const badge = document.getElementById('supabaseSyncBadge');
+              if (badge && status === 'SUBSCRIBED') {
+                badge.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span><span class="font-sans">Supabase Realtime Live</span>';
+              }
+            });
+        } catch (rtErr) {
+          console.warn('[Supabase Realtime Init Warning]', rtErr);
+        }
+      }
+
+      // Fallback periodic sync every 12 seconds
+      setInterval(syncAllFromCloud, 12000);
     });
   </script>
 </body>
