@@ -6,11 +6,14 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatLakhs(valueInLakhs: number): string {
+  if (!Number.isFinite(valueInLakhs) || valueInLakhs <= 0) {
+    return 'Price on Request';
+  }
   if (valueInLakhs >= 100) {
     const crores = valueInLakhs / 100;
-    return `₹${crores.toFixed(2)} Cr`;
+    return `₹${crores.toFixed(2).replace(/\.00$/, '')} Cr`;
   }
-  return `₹${valueInLakhs.toFixed(2)} L`;
+  return `₹${valueInLakhs.toFixed(2).replace(/\.00$/, '')} L`;
 }
 
 export function formatExactINR(amount: number): string {

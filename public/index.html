@@ -1193,17 +1193,101 @@
     const img5 = 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80';
     const img6 = 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1200&q=80';
 
-    // Float Price Parser supporting raw decimals, Lakhs, Crores
-    function parsePriceToFloat(raw) {
-      if (!raw) return 0;
-      if (typeof raw === 'number') return raw;
-      const cleaned = String(raw).replace(/[₹,\s]/g, '').toLowerCase();
-      let val = parseFloat(cleaned);
-      if (!Number.isFinite(val)) return 0;
-      if (cleaned.includes('cr') || (val < 20 && cleaned.includes('.'))) {
-        if (cleaned.includes('cr')) val = val * 100;
+    // Universal Price Normalizer supporting raw decimals, Lakhs, Crores, and Indian currency strings
+    function normalizePropertyPrice(raw) {
+      if (raw === null || raw === undefined || raw === '') {
+        return { priceInr: 0, priceLakhs: 0, displayFormatted: 'Price on Request', compactFormatted: 'Price on Request' };
       }
-      return Number(val.toFixed(2));
+
+      if (typeof raw === 'number' && Number.isFinite(raw)) {
+        let rupees = raw;
+        let lakhs = raw;
+        if (raw < 10000) {
+          rupees = raw * 100000;
+          lakhs = raw;
+        } else {
+          rupees = raw;
+          lakhs = raw / 100000;
+        }
+        return formatPriceResult(rupees, lakhs);
+      }
+
+      const str = String(raw).trim();
+      const lower = str.toLowerCase().replace(/[₹,\s]/g, '');
+      if (!lower) {
+        return { priceInr: 0, priceLakhs: 0, displayFormatted: 'Price on Request', compactFormatted: 'Price on Request' };
+      }
+
+      // Check for combined display string e.g. "₹ 25,00,000.75 (₹ 25 l)"
+      const cleanPrimary = lower.split('(')[0].trim();
+
+      const crMatch = cleanPrimary.match(/^([\d.]+)(?:cr|crore|crores)$/);
+      if (crMatch) {
+        const cr = parseFloat(crMatch[1]);
+        if (Number.isFinite(cr) && cr > 0) {
+          return formatPriceResult(cr * 10000000, cr * 100);
+        }
+      }
+
+      const lMatch = cleanPrimary.match(/^([\d.]+)(?:l|lac|lacs|lakh|lakhs)$/);
+      if (lMatch) {
+        const l = parseFloat(lMatch[1]);
+        if (Number.isFinite(l) && l > 0) {
+          return formatPriceResult(l * 100000, l);
+        }
+      }
+
+      const kMatch = cleanPrimary.match(/^([\d.]+)k$/);
+      if (kMatch) {
+        const k = parseFloat(kMatch[1]);
+        if (Number.isFinite(k) && k > 0) {
+          return formatPriceResult(k * 1000, k / 100);
+        }
+      }
+
+      const num = parseFloat(cleanPrimary);
+      if (!Number.isFinite(num) || num <= 0) {
+        return { priceInr: 0, priceLakhs: 0, displayFormatted: 'Price on Request', compactFormatted: 'Price on Request' };
+      }
+
+      if (num < 25 && cleanPrimary.includes('.')) {
+        return formatPriceResult(num * 10000000, num * 100);
+      }
+
+      if (num <= 1000) {
+        return formatPriceResult(num * 100000, num);
+      }
+
+      return formatPriceResult(num, num / 100000);
+    }
+
+    function formatPriceResult(rupees, lakhs) {
+      const hasDecimals = (rupees % 1) !== 0;
+      const intPart = Math.floor(rupees);
+      const decPart = hasDecimals ? (rupees % 1).toFixed(2).slice(1) : '';
+      const inrFormatted = `₹ ${intPart.toLocaleString('en-IN')}${decPart}`;
+
+      let compactFormatted = '';
+      if (rupees >= 10000000) {
+        const cr = rupees / 10000000;
+        compactFormatted = `₹ ${cr.toFixed(2).replace(/\.00$/, '')} Cr`;
+      } else if (rupees >= 100000) {
+        const l = rupees / 100000;
+        compactFormatted = `₹ ${l.toFixed(2).replace(/\.00$/, '')} L`;
+      } else {
+        compactFormatted = inrFormatted;
+      }
+
+      return {
+        priceInr: Number(rupees.toFixed(2)),
+        priceLakhs: Number(lakhs.toFixed(2)),
+        displayFormatted: inrFormatted,
+        compactFormatted: compactFormatted
+      };
+    }
+
+    function parsePriceToFloat(raw) {
+      return normalizePropertyPrice(raw).priceLakhs;
     }
 
     // Default empty array - strictly populated from authoritative Supabase Cloud database
@@ -1345,7 +1429,10 @@
             const json = await res.json();
             if (json.success && Array.isArray(json.properties)) {
               properties = json.properties.map(row => {
-                const priceDisplay = row.price_display || (row.total_price ? (row.total_price >= 100 ? `₹${(row.total_price / 100).toFixed(2).replace(/\.00$/, '')} Cr` : `₹${Number(row.total_price).toFixed(2).replace(/\.00$/, '')} Lakhs`) : 'Price on Request');
+                const pNorm = normalizePropertyPrice(row.price_display || row.total_price);
+                const priceDisplay = (pNorm.priceInr > 0)
+                  ? (row.price_display && !row.price_display.includes('₹0') ? row.price_display : `${pNorm.displayFormatted} (${pNorm.compactFormatted})`)
+                  : (row.total_price > 0 ? `${pNorm.displayFormatted} (${pNorm.compactFormatted})` : 'Price on Request');
                 return [
                   row.title || 'Untitled',
                   row.location || 'Coimbatore',
@@ -2105,10 +2192,9 @@ function getUserAvatar(username) {
         return;
       }
 
-      const numPrice = parsePriceToFloat(priceRaw);
-      const formattedDisplay = numPrice >= 100
-        ? `₹${(numPrice / 100).toFixed(2).replace(/\.00$/, '')} Cr`
-        : `₹${numPrice.toFixed(2).replace(/\.00$/, '')} Lakhs`;
+      const priceNorm = normalizePropertyPrice(priceRaw);
+      const numPrice = priceNorm.priceLakhs;
+      const formattedDisplay = `${priceNorm.displayFormatted} (${priceNorm.compactFormatted})`;
 
       const idx = parseInt(document.getElementById('editPropIndex').value, 10);
       let propId = 'prop_' + Date.now();
@@ -2141,7 +2227,13 @@ function getUserAvatar(username) {
           type: type,
           cover_image: cover,
           description: desc,
-          amenities: [...currentAmenitiesList]
+          amenities: [...currentAmenitiesList],
+          ai_generated_summary: JSON.stringify({
+            priceInr: priceNorm.priceInr,
+            priceLakhs: priceNorm.priceLakhs,
+            displayFormatted: priceNorm.displayFormatted,
+            compactFormatted: priceNorm.compactFormatted
+          })
         };
         await fetch('/api/properties', {
           method: 'POST',
@@ -2559,6 +2651,13 @@ function getUserAvatar(username) {
       const oldStatus = enq.status;
       enq.status = newStatus;
       VVAppStore.saveEnquiries();
+      if (enq.id) {
+        fetch('/api/inquiries', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: enq.id, status: newStatus })
+        }).catch(e => console.warn('[Enquiries] Cloud patch failed:', e));
+      }
       logActivity(`Updated lead status for "${enq.name}" from "${oldStatus}" to "${newStatus}"`, 'Enquiries');
       showToast(`Status updated to "${newStatus}"`);
     }
@@ -2571,6 +2670,13 @@ function getUserAvatar(username) {
       if (enq.status === 'New') {
         enq.status = 'None';
         VVAppStore.saveEnquiries();
+        if (enq.id) {
+          fetch('/api/inquiries', {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: enq.id, status: 'None' })
+          }).catch(e => console.warn('[Enquiries] Cloud patch failed:', e));
+        }
         logActivity(`Opened lead dossier for ${enq.name} - Labeled as None`, 'Enquiries');
       }
 
@@ -3170,11 +3276,12 @@ const denseCurvePoints = {
             prevEl.textContent = 'Preview: —';
             return;
           }
-          const parsed = parsePriceToFloat(val);
-          const formatted = parsed >= 100
-            ? `₹${(parsed / 100).toFixed(2).replace(/\.00$/, '')} Cr`
-            : `₹${parsed.toFixed(2).replace(/\.00$/, '')} Lakhs`;
-          prevEl.textContent = `Preview: ${formatted} (₹${(parsed * 100000).toLocaleString('en-IN')})`;
+          const norm = normalizePropertyPrice(val);
+          if (norm.priceInr > 0) {
+            prevEl.textContent = `Preview: ${norm.displayFormatted} (${norm.compactFormatted})`;
+          } else {
+            prevEl.textContent = 'Preview: Price on Request';
+          }
         });
       }
 

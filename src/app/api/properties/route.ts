@@ -24,11 +24,15 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }
 
-    // Authoritative cloud response (including empty [] when all properties deleted)
+    // Authoritative cloud response (excluding internal system configuration rows)
+    const filteredProps = (data || []).filter(
+      (p: any) => !String(p.id || "").startsWith("__system_config")
+    );
+
     return NextResponse.json({
       success: true,
-      properties: data || [],
-      count: (data || []).length,
+      properties: filteredProps,
+      count: filteredProps.length,
       source: "supabase",
     });
   } catch (err: unknown) {
@@ -36,6 +40,97 @@ export async function GET(req: NextRequest) {
     console.error("[API properties GET Fatal Error]", err);
     return NextResponse.json({ success: false, error: message }, { status: 500 });
   }
+}
+
+function normalizePrice(raw: unknown) {
+  if (raw === null || raw === undefined || raw === "") {
+    return { priceInr: 0, priceLakhs: 0, displayFormatted: "Price on Request", compactFormatted: "Price on Request" };
+  }
+
+  if (typeof raw === "number" && Number.isFinite(raw)) {
+    let rupees = raw;
+    let lakhs = raw;
+    if (raw < 10000) {
+      rupees = raw * 100000;
+      lakhs = raw;
+    } else {
+      rupees = raw;
+      lakhs = raw / 100000;
+    }
+    return formatPriceResult(rupees, lakhs);
+  }
+
+  const str = String(raw).trim();
+  const lower = str.toLowerCase().replace(/[₹,\s]/g, "");
+  if (!lower) {
+    return { priceInr: 0, priceLakhs: 0, displayFormatted: "Price on Request", compactFormatted: "Price on Request" };
+  }
+
+  const cleanPrimary = lower.split("(")[0].trim();
+
+  const crMatch = cleanPrimary.match(/^([\d.]+)(?:cr|crore|crores)$/);
+  if (crMatch) {
+    const cr = parseFloat(crMatch[1]);
+    if (Number.isFinite(cr) && cr > 0) {
+      return formatPriceResult(cr * 10000000, cr * 100);
+    }
+  }
+
+  const lMatch = cleanPrimary.match(/^([\d.]+)(?:l|lac|lacs|lakh|lakhs)$/);
+  if (lMatch) {
+    const l = parseFloat(lMatch[1]);
+    if (Number.isFinite(l) && l > 0) {
+      return formatPriceResult(l * 100000, l);
+    }
+  }
+
+  const kMatch = cleanPrimary.match(/^([\d.]+)k$/);
+  if (kMatch) {
+    const k = parseFloat(kMatch[1]);
+    if (Number.isFinite(k) && k > 0) {
+      return formatPriceResult(k * 1000, k / 100);
+    }
+  }
+
+  const num = parseFloat(cleanPrimary);
+  if (!Number.isFinite(num) || num <= 0) {
+    return { priceInr: 0, priceLakhs: 0, displayFormatted: "Price on Request", compactFormatted: "Price on Request" };
+  }
+
+  if (num < 25 && cleanPrimary.includes(".")) {
+    return formatPriceResult(num * 10000000, num * 100);
+  }
+
+  if (num <= 1000) {
+    return formatPriceResult(num * 100000, num);
+  }
+
+  return formatPriceResult(num, num / 100000);
+}
+
+function formatPriceResult(rupees: number, lakhs: number) {
+  const hasDecimals = (rupees % 1) !== 0;
+  const intPart = Math.floor(rupees);
+  const decPart = hasDecimals ? (rupees % 1).toFixed(2).slice(1) : "";
+  const inrFormatted = `₹ ${intPart.toLocaleString("en-IN")}${decPart}`;
+
+  let compactFormatted = "";
+  if (rupees >= 10000000) {
+    const cr = rupees / 10000000;
+    compactFormatted = `₹ ${cr.toFixed(2).replace(/\.00$/, "")} Cr`;
+  } else if (rupees >= 100000) {
+    const l = rupees / 100000;
+    compactFormatted = `₹ ${l.toFixed(2).replace(/\.00$/, "")} L`;
+  } else {
+    compactFormatted = inrFormatted;
+  }
+
+  return {
+    priceInr: Number(rupees.toFixed(2)),
+    priceLakhs: Number(lakhs.toFixed(2)),
+    displayFormatted: inrFormatted,
+    compactFormatted: compactFormatted,
+  };
 }
 
 export async function POST(req: NextRequest) {
@@ -49,25 +144,16 @@ export async function POST(req: NextRequest) {
     const nowIso = new Date().toISOString();
     const propId = propData.id || `prop_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
     
-    // Parse numeric prices supporting decimal floats (e.g. 4.5 Lakhs, 1.25 Cr, 45.75)
-    let rawPrice = propData.totalPrice ?? propData.price ?? propData.total_price ?? 0;
-    if (typeof rawPrice === 'string') {
-      const cleaned = rawPrice.replace(/[₹,\s]/g, '').toLowerCase();
-      if (cleaned.includes('cr')) {
-        rawPrice = parseFloat(cleaned) * 100; // in Lakhs
-      } else if (cleaned.includes('l')) {
-        rawPrice = parseFloat(cleaned);
-      } else {
-        rawPrice = parseFloat(cleaned) || 0;
-      }
-    }
-    const totalPriceFloat = Number(parseFloat(String(rawPrice || 0)).toFixed(2));
+    // Parse numeric prices supporting decimal floats (e.g. 4.5 Lakhs, 1.25 Cr, 45.75, 2500000.50)
+    const rawPriceInput = propData.priceInr ?? propData.price_display ?? propData.priceDisplay ?? propData.totalPrice ?? propData.price ?? propData.total_price;
+    const priceNorm = normalizePrice(rawPriceInput);
 
     const priceDisplay =
+      propData.price_display ||
       propData.priceDisplay ||
-      (totalPriceFloat >= 100
-        ? `₹${(totalPriceFloat / 100).toFixed(2).replace(/\.00$/, '')} Cr`
-        : `₹${totalPriceFloat.toFixed(2).replace(/\.00$/, '')} Lakhs`);
+      (priceNorm.priceInr > 0
+        ? `${priceNorm.displayFormatted} (${priceNorm.compactFormatted})`
+        : "Price on Request");
 
     const supabase = createAdminClient();
 
@@ -79,7 +165,7 @@ export async function POST(req: NextRequest) {
       type: propData.type || "Plot",
       location: propData.location || "Coimbatore",
       corridor: propData.corridor || null,
-      total_price: totalPriceFloat,
+      total_price: priceNorm.priceLakhs,
       price_display: priceDisplay,
       area_cents: Number(parseFloat(String(propData.areaCents || propData.area_cents || 0)).toFixed(2)),
       area_sqft: Number(parseFloat(String(propData.areaSqFt || propData.area_sqft || 0)).toFixed(2)),
@@ -87,6 +173,7 @@ export async function POST(req: NextRequest) {
       status: propData.status || "Available",
       badge: propData.badge || propData.badgeTag || null,
       cover_image:
+        propData.cover_image ||
         propData.coverImage ||
         propData.featuredImage ||
         "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200",
@@ -96,8 +183,14 @@ export async function POST(req: NextRequest) {
           ? propData.galleryImages
           : [],
       amenities: propData.amenities || [],
-      description: propData.description || null,
-      ai_generated_summary: propData.ai_generated_summary || propData.shortDescription || null,
+      description: propData.description || "",
+      ai_generated_summary: JSON.stringify({
+        priceInr: priceNorm.priceInr,
+        priceLakhs: priceNorm.priceLakhs,
+        displayFormatted: priceNorm.displayFormatted,
+        compactFormatted: priceNorm.compactFormatted,
+        ...(typeof propData.ai_generated_summary === "string" ? (() => { try { return JSON.parse(propData.ai_generated_summary); } catch { return {}; } })() : (propData.ai_generated_summary || {}))
+      }),
       updated_at: nowIso,
     };
 

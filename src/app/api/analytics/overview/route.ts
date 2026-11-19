@@ -20,7 +20,8 @@ export async function GET() {
       .from("site_visits")
       .select("id, status, visit_date");
 
-    const propList: any[] = (properties as any[]) || [];
+    const rawProps: any[] = (properties as any[]) || [];
+    const propList: any[] = rawProps.filter((p: any) => !String(p.id || "").startsWith("__system_config"));
     const inqList: any[] = (inquiries as any[]) || [];
     const visitList: any[] = (visits as any[]) || [];
 
